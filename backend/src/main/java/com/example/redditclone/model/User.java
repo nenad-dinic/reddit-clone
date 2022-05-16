@@ -1,4 +1,4 @@
-package com.example.redditclone;
+package com.example.redditclone.model;
 
 import lombok.Getter;
 import lombok.Setter;

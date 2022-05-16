@@ -1,5 +1,7 @@
-package com.example.redditclone;
+package com.example.redditclone.controllers;
 
+import com.example.redditclone.model.User;
+import com.example.redditclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,17 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-public class TestController {
+public class UserController {
     @Autowired
     UserRepository repository;
 
 
-    @GetMapping("/")
+    @GetMapping("/user")
     String getHello() {
         return "{'status': 'OK'}";
     }
 
-    @PostMapping("/")
+    @PostMapping("/user")
     User createUser() {
         return repository.save(new User ("test", "test", "test", "test", LocalDate.now(), "test", "test"));
     }

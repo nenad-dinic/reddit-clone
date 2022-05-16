@@ -1,4 +1,4 @@
-package com.example.redditclone;
+package com.example.redditclone.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class Community {
     private String suspendedReason;
 
     public Community() {
-        
+
     }
 
     public Community(String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason) {
