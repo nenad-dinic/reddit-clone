@@ -1,7 +1,6 @@
 package com.example.redditclone.controllers;
 
-import com.example.redditclone.dto.CreateCommunityData;
-import com.example.redditclone.dto.UpdateCommunityData;
+import com.example.redditclone.dto.CommunityDTO;
 import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Moderator;
 import com.example.redditclone.repository.CommunityRepository;
@@ -10,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Executable;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 public class CommunityController {
@@ -24,7 +23,7 @@ public class CommunityController {
     @PostMapping(value = "/community",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community createCommunity(@RequestBody CreateCommunityData data) {
+    Community createCommunity(@RequestBody CommunityDTO.Add data) {
         try {
             Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, ""));
             moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
@@ -49,12 +48,32 @@ public class CommunityController {
     @PutMapping(value = "/community",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community updateCommunity(@RequestParam("id") String id, @RequestBody UpdateCommunityData data) {
+    Community updateCommunity(@RequestParam("id") String id, @RequestBody CommunityDTO.Update data) {
         try {
             Community c = communityRepository.findById(Long.parseLong(id)).get();
             c.setName(data.getName());
             c.setDescription(data.getDescription());
             return communityRepository.save(c);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/community",
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    Community getCommunity(@RequestParam("id") String id) {
+        try {
+            return communityRepository.findById(Long.parseLong(id)).get();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/communities",
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Community> getCommunities() {
+        try {
+            return communityRepository.findAll();
         } catch (Exception e) {
             return null;
         }

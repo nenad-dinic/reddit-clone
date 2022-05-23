@@ -1,14 +1,14 @@
 package com.example.redditclone.controllers;
 
-import com.example.redditclone.dto.AddUserData;
-import com.example.redditclone.dto.ChangePasswordData;
-import com.example.redditclone.dto.LoginUserData;
+import com.example.redditclone.dto.UserDTO;
 import com.example.redditclone.misc.HashPassword;
 import com.example.redditclone.model.User;
 import com.example.redditclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 public class UserController {
@@ -25,10 +25,10 @@ public class UserController {
     @PostMapping(value = "/user/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    User createUser(@RequestBody AddUserData data){
+    User createUser(@RequestBody UserDTO.Add data){
         try {
             String hashPassword = HashPassword.createHash(data.getPassword());
-            return repository.save(new User (data.getUsername(), hashPassword, data.getEmail(), data.getAvatar(), data.getRegistrationDate(), data.getDescription(), data.getDisplayName()));
+            return repository.save(new User (data.getUsername(), hashPassword, data.getEmail(), data.getAvatar(), LocalDate.now(), data.getDescription(), data.getDisplayName()));
 
         } catch (Exception e) {
             //throw new APIResponse(1001, "failure", "Failed to register");
@@ -39,7 +39,7 @@ public class UserController {
     @PostMapping(value = "user/login",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    User loginUser(@RequestBody LoginUserData data) {
+    User loginUser(@RequestBody UserDTO.Login data) {
         String hashPassword = HashPassword.createHash(data.getPassword());
         try {
             return repository.findOneByUsernameAndPassword(data.getUsername(), hashPassword);
@@ -51,7 +51,7 @@ public class UserController {
     @PutMapping(value = "user/changePassword",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    User changePassword(@RequestBody ChangePasswordData data) {
+    User changePassword(@RequestBody UserDTO.ChangePassword data) {
         String hashPassword = HashPassword.createHash(data.getPassword());
         String newHashPassword = HashPassword.createHash(data.getNewPassword());
         try {

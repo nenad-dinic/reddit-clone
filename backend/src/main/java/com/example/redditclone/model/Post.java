@@ -16,17 +16,19 @@ public class Post {
     private String text;
     private LocalDate creationDate;
     private String imagePath;
-    private int postedBy;
+    private Long postedBy;
+    private Long communityId;
 
     public Post() {
 
     }
 
-    public Post(String title, String text, LocalDate creationDate, String imagePath, int postedBy) {
+    public Post(String title, String text, LocalDate creationDate, String imagePath, Long postedBy, Long communityId) {
         this.title = title;
         this.text = text;
         this.creationDate = creationDate;
         this.imagePath = imagePath;
         this.postedBy = postedBy;
+        this.communityId = communityId;
     }
 }
