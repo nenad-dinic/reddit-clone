@@ -1,15 +1,12 @@
 package com.example.redditclone;
 
-import com.example.redditclone.repository.CommunityRepository;
-import com.example.redditclone.repository.ModeratorRepository;
-import com.example.redditclone.repository.PostRepository;
+import com.example.redditclone.repository.*;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.example.redditclone.repository.UserRepository;
 
 @Configuration
 public class LoadDatabase {
@@ -33,5 +30,10 @@ public class LoadDatabase {
     @Bean
     CommandLineRunner initModerator(ModeratorRepository repository) {
         return args -> {log.info("Initialized moderator");};
+    }
+
+    @Bean
+    CommandLineRunner initAdmin(AdminRepository repository) {
+        return args -> {log.info("Initialized admin");};
     }
 }

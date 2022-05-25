@@ -9,4 +9,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     //@Query(value = "SELECT * FROM user WHERE username=data.getUsername() and password=hashPassword;")
     User findOneByUsernameAndPassword(String username, String password);
+
+    User findOneByUsername(String username);
 }
