@@ -17,12 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/*@Configuration
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    /*@Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -53,12 +53,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .setAuthenticationManager(authenticationManagerBean());
         return authenticationTokenFilter;
     }
-
+*/
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         //Naglasavamo browser-u da ne cache-ira podatke koje dobije u header-ima
         //detaljnije: https://www.baeldung.com/spring-security-cache-control-headers
-        httpSecurity.headers().cacheControl().disable();
+        /*httpSecurity.headers().cacheControl().disable();
         //Neophodno da ne bi proveravali autentifikaciju kod Preflight zahteva
         httpSecurity.cors();
         //sledeca linija je neophodna iskljucivo zbog nacina na koji h2 konzola komunicira sa aplikacijom
@@ -72,6 +72,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated();
 
-        httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);*/
+        httpSecurity.authorizeRequests().anyRequest().permitAll();
+        httpSecurity.csrf().disable();
     }
-}*/
+}
