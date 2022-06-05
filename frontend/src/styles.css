@@ -2,3 +2,24 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.fixed-input .mat-form-field-flex {
+    padding-top: 0;
+
+}
+.fixed-input .mat-form-field-label-wrapper {
+    padding-top: 0;
+    
+}
+.fixed-input .mat-form-field-wrapper {
+    padding-bottom: 0;
+    
+}
+.fixed-input .mat-form-field-underline {
+    bottom: 0;
+    
+}
+.fixed-input .mat-form-field-infix {
+    border-top: 0;
+    
+}

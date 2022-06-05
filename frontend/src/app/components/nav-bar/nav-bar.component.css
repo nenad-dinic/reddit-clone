@@ -1,0 +1,22 @@
+mat-toolbar {
+    height: 75px;
+    display: flex;
+    background-color: rgb(165, 165, 165);
+}
+
+.fixed-input {
+    width: 30%;
+}
+
+input {
+    font-size: 12pt;
+}
+
+.expand {
+    flex-grow: 1;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    background: white;
+    border-radius: 5px;
+}
