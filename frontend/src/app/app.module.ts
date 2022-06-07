@@ -13,13 +13,25 @@ import { LoginDialogComponent } from './components/login-dialog/login-dialog.com
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
+import { RegisterDialogComponent } from './components/register-dialog/register-dialog.component';
+import { PostSorterComponent } from './components/post-sorter/post-sorter.component';
+import { PostComponent } from './components/post/post.component';
+import {MatCardModule} from '@angular/material/card'; 
+import {MatIconModule} from '@angular/material/icon'; 
+import { PostService } from './services/post.service';
+import { AppRoutingModule } from './app.routing';
+import { CommunityPageComponent } from './pages/community-page/community-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
     NavBarComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    RegisterDialogComponent,
+    PostSorterComponent,
+    PostComponent,
+    CommunityPageComponent
   ],
   imports: [
     BrowserModule,
@@ -30,9 +42,12 @@ import { HttpClientModule } from '@angular/common/http';
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCardModule,
+    MatIconModule,
+    AppRoutingModule
   ],
-  providers: [UserService],
+  providers: [UserService,PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

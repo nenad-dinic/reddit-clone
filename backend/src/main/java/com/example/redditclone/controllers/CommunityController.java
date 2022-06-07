@@ -3,8 +3,10 @@ package com.example.redditclone.controllers;
 import com.example.redditclone.dto.CommunityDTO;
 import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Moderator;
+import com.example.redditclone.model.Post;
 import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.ModeratorRepository;
+import com.example.redditclone.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ public class CommunityController {
 
     @Autowired
     ModeratorRepository moderatorRepository;
+
+    @Autowired
+    PostRepository postRepository;
 
     @PostMapping(value = "/community",
     consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -61,9 +66,9 @@ public class CommunityController {
 
     @GetMapping(value = "/community",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community getCommunity(@RequestParam("id") String id) {
+    Community getCommunity(@RequestParam("name") String name) {
         try {
-            return communityRepository.findById(Long.parseLong(id)).get();
+            return communityRepository.findByName(name);
         } catch (Exception e) {
             return null;
         }
@@ -74,6 +79,16 @@ public class CommunityController {
     List<Community> getCommunities() {
         try {
             return communityRepository.findAll();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/community/posts",
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Post> getCommunityPosts(@RequestParam("name") String name) {
+        try {
+            return postRepository.findAllForCommunity(name);
         } catch (Exception e) {
             return null;
         }

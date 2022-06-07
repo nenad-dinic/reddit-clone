@@ -1,5 +1,5 @@
 <mat-toolbar>
-    <button mat-button> Redut
+    <button mat-button routerLink="/home"> Redut
     </button>
     <span class="expand"></span>
     <mat-form-field class="fixed-input" appearance="outline">
@@ -8,7 +8,7 @@
     <span class="expand"></span>
     <button mat-button (click)="openLoginDialog()"> Login
     </button>
-    <button mat-button> Register
+    <button mat-button (click)="openRegisterDialog()"> Register
     </button>
   </mat-toolbar>
   

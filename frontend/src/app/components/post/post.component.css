@@ -1,0 +1,16 @@
+mat-card {
+    width: 80%;
+    margin: 1rem auto;
+}
+
+mat-card-actions {
+    display: flex;
+}
+
+.counter {
+    margin-top: 12px;
+}
+
+span {
+    flex-grow: 1;
+}

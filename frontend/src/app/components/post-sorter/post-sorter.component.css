@@ -1,0 +1,11 @@
+button {
+    margin: 1rem;
+}
+
+.sorter {
+    width: 80%;
+    background-color: rgb(92, 157, 255);
+    margin: 1rem auto;
+    padding: 0 1rem;
+    border-radius: 100px;
+}

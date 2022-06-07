@@ -1,3 +1,4 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -17,7 +18,7 @@ export class LoginDialogComponent implements OnInit {
     }
   )
 
-  constructor(private userService:UserService) { }
+  constructor(private userService:UserService, public dialogRef: DialogRef<LoginDialogComponent>) { }
 
   ngOnInit(): void {
   }
@@ -28,8 +29,12 @@ export class LoginDialogComponent implements OnInit {
     } else {
       let data = this.loginGroup.value
       this.userService.login(data.username, data.password).subscribe(response=>{
-        console.log(response)
-      })
+        if (response==null) {
+          alert("login failed")
+        } else {
+          localStorage.setItem("token", response.token);
+          this.dialogRef.close();
+        }      })
     }
   }
 }

@@ -66,7 +66,7 @@ public class PostController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     List<Post> getPosts() {
         try {
-            return postRepository.findAll();
+            return postRepository.findByOrderByCreationDateDesc();
         } catch (Exception e) {
             return null;
         }
