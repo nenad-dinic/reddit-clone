@@ -21,6 +21,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { PostService } from './services/post.service';
 import { AppRoutingModule } from './app.routing';
 import { CommunityPageComponent } from './pages/community-page/community-page.component';
+import { CommunityService } from './services/community.service';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,7 @@ import { CommunityPageComponent } from './pages/community-page/community-page.co
     MatIconModule,
     AppRoutingModule
   ],
-  providers: [UserService,PostService],
+  providers: [UserService, PostService, CommunityService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
