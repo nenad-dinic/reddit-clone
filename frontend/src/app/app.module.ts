@@ -24,6 +24,7 @@ import { CommunityPageComponent } from './pages/community-page/community-page.co
 import { CommunityService } from './services/community.service';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { PostCreatorComponent } from './components/post-creator/post-creator.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { PostCreatorComponent } from './components/post-creator/post-creator.com
     MatCardModule,
     MatIconModule,
     AppRoutingModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSnackBarModule
   ],
   providers: [UserService, PostService, CommunityService],
   bootstrap: [AppComponent]

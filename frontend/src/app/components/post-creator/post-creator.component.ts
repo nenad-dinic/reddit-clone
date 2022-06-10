@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostService } from 'src/app/services/post.service';
 
 @Component({
@@ -19,7 +20,11 @@ export class PostCreatorComponent implements OnInit {
   @Input()
   communityId!: number;
 
-  constructor(private postService: PostService) { }
+  @Output()
+  onPostCreation = new EventEmitter();
+
+  constructor(private postService: PostService,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -31,9 +36,11 @@ export class PostCreatorComponent implements OnInit {
       let data = this.postGroup.value;
       this.postService.createPost(data.title, data.description, 1, this.communityId).subscribe(response => {
         if (response == undefined) {
-          alert("failed to create post")
+          this.snackBar.open("Failed to create post", "OK")
         } else {
-          alert("Post created")
+          this.snackBar.open("Post created", "Ok")
+          this.onPostCreation.emit();
+          this.postGroup.reset();
         }
       })
     }

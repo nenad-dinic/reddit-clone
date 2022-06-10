@@ -25,22 +25,31 @@ export class CommunityPageComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.communityName = params["name"];
-      this.communityName = this.communityName[0].toUpperCase() + this.communityName.substring(1).toLowerCase();
-      if (this.communityName == undefined) {
-        this.router.navigateByUrl("/home")
+      if (this.communityName != undefined) {
+        this.communityName = this.communityName[0].toUpperCase() + this.communityName.substring(1).toLowerCase();
+        this.loadCommunity();
+        this.loadPosts();
       } else {
-        this.communityService.getByName(this.communityName).subscribe(response => {
-          if (response == undefined) {
-            this.router.navigateByUrl("/home");
-          } else {
-            this.communityData = response;
-          }
-        })
-        this.postService.getAllForCommunity(this.communityName).subscribe(response => {
-          if (response != null) {
-            this.posts = response;
-          }
-        })
+        this.router.navigateByUrl("/home");
+      }
+    })
+  }
+
+  loadPosts() {
+    this.posts = [];
+    this.postService.getAllForCommunity(this.communityName).subscribe(response => {
+      if (response != null) {
+        this.posts = response;
+      }
+    })
+  }
+
+  loadCommunity() {
+    this.communityService.getByName(this.communityName).subscribe(response => {
+      if (response == undefined) {
+        this.router.navigateByUrl("/home");
+      } else {
+        this.communityData = response;
       }
     })
   }
