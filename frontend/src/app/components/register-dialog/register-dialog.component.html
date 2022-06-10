@@ -1,5 +1,5 @@
 <form [formGroup]="registerGroup" (ngSubmit)="register()">
-    <h1>Registracija</h1>
+    <h1>Register</h1>
 
     <mat-form-field>
         <input matInput type="text" placeholder="username" formControlName="username">
@@ -12,8 +12,9 @@
     <mat-form-field>
         <input matInput type="email" placeholder="email" formControlName="email">
     </mat-form-field>
+    
+    <button mat-button type="submit">Register</button>
 
-    <button mat-button (click)="changeWindow()">Prijavi se</button>
-
-    <button mat-button type="submit">Submit</button>
+    <p class="text">Already have account?</p>
+    <button mat-button (click)="changeWindow()">Login</button>
 </form>
