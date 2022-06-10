@@ -1,4 +1,6 @@
 <form [formGroup]="registerGroup" (ngSubmit)="register()">
+    <h1>Registracija</h1>
+
     <mat-form-field>
         <input matInput type="text" placeholder="username" formControlName="username">
     </mat-form-field>
@@ -10,6 +12,8 @@
     <mat-form-field>
         <input matInput type="email" placeholder="email" formControlName="email">
     </mat-form-field>
+
+    <button mat-button (click)="changeWindow()">Prijavi se</button>
 
     <button mat-button type="submit">Submit</button>
 </form>

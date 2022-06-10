@@ -1,5 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user.service';
@@ -17,6 +17,9 @@ export class LoginDialogComponent implements OnInit {
       password: new FormControl("", [Validators.required])
     }
   )
+
+  @Output()
+  changeToRegister = new EventEmitter();
 
   constructor(private userService:UserService, public dialogRef: DialogRef<LoginDialogComponent>) { }
 
@@ -36,5 +39,9 @@ export class LoginDialogComponent implements OnInit {
           this.dialogRef.close();
         }      })
     }
+  }
+
+  changeWindow() {
+    this.changeToRegister.emit();
   }
 }

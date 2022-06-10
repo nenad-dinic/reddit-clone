@@ -22,6 +22,8 @@ import { PostService } from './services/post.service';
 import { AppRoutingModule } from './app.routing';
 import { CommunityPageComponent } from './pages/community-page/community-page.component';
 import { CommunityService } from './services/community.service';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { PostCreatorComponent } from './components/post-creator/post-creator.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { CommunityService } from './services/community.service';
     RegisterDialogComponent,
     PostSorterComponent,
     PostComponent,
-    CommunityPageComponent
+    CommunityPageComponent,
+    PostCreatorComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +49,8 @@ import { CommunityService } from './services/community.service';
     HttpClientModule,
     MatCardModule,
     MatIconModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatExpansionModule
   ],
   providers: [UserService, PostService, CommunityService],
   bootstrap: [AppComponent]

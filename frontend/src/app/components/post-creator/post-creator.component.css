@@ -1,0 +1,9 @@
+mat-expansion-panel {
+    width: calc(80% + 2rem);
+    margin: 0 auto;
+    padding: auto 1rem;
+}
+
+mat-form-field {
+    display: block;
+}

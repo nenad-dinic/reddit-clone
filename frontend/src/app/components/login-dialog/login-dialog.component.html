@@ -1,4 +1,5 @@
 <form [formGroup]="loginGroup" (ngSubmit)="login()">
+    <h1>Prijava</h1>
     <mat-form-field>
         <input matInput type="text" placeholder="username" formControlName="username">
     </mat-form-field>
@@ -6,6 +7,8 @@
     <mat-form-field>
         <input matInput type="password" placeholder="password" formControlName="password">
     </mat-form-field>
+
+    <button mat-button (click)="changeWindow()">Registruj se</button>
 
     <button mat-button type="submit">Submit</button>
 </form>

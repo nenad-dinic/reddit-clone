@@ -1,4 +1,10 @@
-<h1>{{communityName}}</h1>
-<p>{{communityData.description}}</p>
+<div class="banner">
+    <img src="assets/papers.co-vd93-shining-aqua-white-abstract-art-pattern-35-3840x2160-4k-wallpaper.jpg">
+    <div class="text">
+        <h1>{{communityName}}</h1>
+        <p>{{communityData.description}}</p>
+    </div>
+</div>
 <app-post-sorter></app-post-sorter>
+<app-post-creator [communityId]="communityData.id"></app-post-creator>
 <app-post *ngFor="let post of posts" [data]="post"></app-post>

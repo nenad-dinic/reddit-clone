@@ -18,11 +18,19 @@ export class NavBarComponent implements OnInit {
   }
 
   openLoginDialog() {
-    this.dialog.open(LoginDialogComponent);
+    let ref = this.dialog.open(LoginDialogComponent);
+    ref.componentInstance.changeToRegister.subscribe(()=> {
+      ref.close();
+      this.openRegisterDialog();
+    });
   }
 
   openRegisterDialog() {
-    this.dialog.open(RegisterDialogComponent);
+    let ref = this.dialog.open(RegisterDialogComponent);
+    ref.componentInstance.changeToLogin.subscribe(()=> {
+      ref.close();
+      this.openLoginDialog();
+    })
   }
 
   search(input: HTMLInputElement) {

@@ -1,0 +1,14 @@
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>Create post</mat-expansion-panel-header>
+        <form [formGroup]="postGroup" (ngSubmit)="createPost()">
+            <mat-form-field>
+                <input matInput placeholder="Title" formControlName="title">
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput placeholder="Description" formControlName="description"></textarea>
+            </mat-form-field>
+            <button type="submit" mat-flat-button color="primary">Create</button>
+        </form>
+    </mat-expansion-panel>
+</mat-accordion>
