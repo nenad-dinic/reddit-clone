@@ -26,7 +26,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { PostCreatorComponent } from './components/post-creator/post-creator.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMenuModule} from '@angular/material/menu';
-import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post-dialog.component'; 
+import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post-dialog.component';
+import { CommunityDialogComponent } from './components/community-dialog/community-dialog.component'; 
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post
     PostComponent,
     CommunityPageComponent,
     PostCreatorComponent,
-    EditPostDialogComponent
+    EditPostDialogComponent,
+    CommunityDialogComponent
   ],
   imports: [
     BrowserModule,

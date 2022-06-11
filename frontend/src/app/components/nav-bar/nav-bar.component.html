@@ -11,8 +11,12 @@
         <button mat-button (click)="openRegisterDialog()">Register</button>
     </div>
     <div *ngIf="userService.loggedInUser != undefined">
-        <button mat-button>Profile</button>
-        <button mat-button (click)="logOutUser()" color="warn">Logout</button>
+        <button mat-button [matMenuTriggerFor]="menu">Profile</button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item >Edit profile</button>
+            <button mat-menu-item (click)="createCommunityDialog()">Create community</button>
+            <button mat-button (click)="logOutUser()" color="warn">Logout</button>
+        </mat-menu>
     </div>
   </mat-toolbar>
   

@@ -19,16 +19,16 @@ export class EditPostDialogComponent implements OnInit {
   }
   )
 
-  data !: ApiPost;
+
 
   @Output()
   onUpdate = new EventEmitter();
 
-  constructor(@Inject(MAT_DIALOG_DATA) data: ApiPost,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ApiPost,
   private postService: PostService,
   private snackBar: MatSnackBar,
   private dialogRef: DialogRef<EditPostDialogComponent>) {
-    this.data = data;
+  
    }
 
   ngOnInit(): void {

@@ -1,0 +1,12 @@
+<h1>Community</h1>
+<form [formGroup]="communityGroup" (ngSubmit)="submit()">
+    <mat-form-field>
+        <input matInput type="text" placeholder="Name" formControlName="name"> 
+    </mat-form-field>
+
+    <mat-form-field>
+        <textarea matInput placeholder="Description" formControlName="description"></textarea>
+    </mat-form-field>
+
+    <button mat-button type="submit">Submit</button>
+</form>

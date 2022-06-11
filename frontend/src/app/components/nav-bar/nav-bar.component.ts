@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import { CommunityDialogComponent } from '../community-dialog/community-dialog.component';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
 
@@ -46,5 +47,9 @@ export class NavBarComponent implements OnInit {
 
   logOutUser() {
     this.userService.logOut();
+  }
+
+  createCommunityDialog() {
+    this.dialog.open(CommunityDialogComponent);
   }
 }
