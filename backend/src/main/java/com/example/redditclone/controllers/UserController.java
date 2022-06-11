@@ -1,6 +1,6 @@
 package com.example.redditclone.controllers;
 
-import com.example.redditclone.dto.JWTToken;
+import com.example.redditclone.dto.JWTTokenDTO;
 import com.example.redditclone.dto.UserDTO;
 import com.example.redditclone.misc.HashPassword;
 import com.example.redditclone.model.Admin;
@@ -45,13 +45,13 @@ public class UserController {
     @PostMapping(value = "user/login",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    JWTToken loginUser(@RequestBody UserDTO.Login data) {
+    JWTTokenDTO loginUser(@RequestBody UserDTO.Login data) {
         String hashPassword = HashPassword.createHash(data.getPassword());
         try {
             User u = userRepository.findOneByUsernameAndPassword(data.getUsername(), hashPassword);
             if (u != null) {
                 Admin a = adminRepository.findOneByUserId(u.getId());
-                return new JWTToken(TokenUtils.generateToken(u.getUsername(), a != null ? "admin" : "user"));
+                return new JWTTokenDTO(TokenUtils.generateToken(u.getUsername(), a != null ? "admin" : "user"));
             } else {
                 return null;
             }
@@ -74,6 +74,19 @@ public class UserController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @PostMapping(value = "user/tokenId",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    User tokenId(@RequestBody JWTTokenDTO.UserToken data) {
+        String username = TokenUtils.getUsernameFromToken(data.token);
+        try {
+            return userRepository.findOneByUsername(username);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
 }

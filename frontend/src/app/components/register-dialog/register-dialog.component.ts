@@ -1,6 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -21,7 +22,9 @@ export class RegisterDialogComponent implements OnInit {
   @Output()
   changeToLogin = new EventEmitter();
 
-  constructor(private userService:UserService, public dialogRef: DialogRef<RegisterDialogComponent>) { }
+  constructor(private userService:UserService, 
+    public dialogRef: DialogRef<RegisterDialogComponent>,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -33,8 +36,9 @@ export class RegisterDialogComponent implements OnInit {
       let data = this.registerGroup.value
       this.userService.register(data.username, data.password, data.email).subscribe(response=>{
         if (response==null) {
-          alert("registration failed")
+          this.snackBar.open("Failed to register", "Ok")
         } else {
+          this.snackBar.open("Succesfull registration", "Ok")
           this.dialogRef.close();
         }
             

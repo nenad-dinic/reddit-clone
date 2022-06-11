@@ -4,6 +4,7 @@ import { ApiCommunity } from 'src/app/models/community.model';
 import { ApiPost } from 'src/app/models/post.model';
 import { CommunityService } from 'src/app/services/community.service';
 import { PostService } from 'src/app/services/post.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-community-page',
@@ -20,7 +21,8 @@ export class CommunityPageComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private postService: PostService,
-    private communityService: CommunityService) { }
+    private communityService: CommunityService,
+    public userService: UserService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {

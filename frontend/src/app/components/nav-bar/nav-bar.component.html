@@ -6,9 +6,13 @@
         <input matInput #searchInput placeholder="Search" (keyup.enter)="search(searchInput)">
     </mat-form-field>
     <span class="expand"></span>
-    <button mat-button (click)="openLoginDialog()"> Login
-    </button>
-    <button mat-button (click)="openRegisterDialog()"> Register
-    </button>
+    <div *ngIf="userService.loggedInUser == undefined">
+        <button mat-button (click)="openLoginDialog()">Login</button>
+        <button mat-button (click)="openRegisterDialog()">Register</button>
+    </div>
+    <div *ngIf="userService.loggedInUser != undefined">
+        <button mat-button>Profile</button>
+        <button mat-button (click)="logOutUser()" color="warn">Logout</button>
+    </div>
   </mat-toolbar>
   

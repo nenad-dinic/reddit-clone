@@ -25,4 +25,15 @@ export class PostService {
             communityId: communityId
         })
     }
+
+    deletePost(id: number) {
+        return this.http.delete<ApiPost>(environment.APIUrl + "post?id=" + id);
+    }
+
+    updatePost(id: number, title: string|null|undefined, description: string|null|undefined) {
+        return this.http.put<ApiPost>(environment.APIUrl + "post?id=" + id, {
+            title: title,
+            text: description
+        })
+    }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
 
@@ -12,7 +13,8 @@ import { RegisterDialogComponent } from '../register-dialog/register-dialog.comp
 export class NavBarComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
-    private router: Router) {}
+    private router: Router,
+    public userService: UserService) {}
   
   ngOnInit(): void {
   }
@@ -40,5 +42,9 @@ export class NavBarComponent implements OnInit {
     this.router.navigateByUrl("/community?name=" + input.value).then(()=>{
       window.location.reload();
     });
+  }
+
+  logOutUser() {
+    this.userService.logOut();
   }
 }

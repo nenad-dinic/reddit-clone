@@ -7,6 +7,14 @@ mat-card-actions {
     display: flex;
 }
 
+mat-card-title {
+    display: flex;
+}
+
+mat-card-title p {
+    margin: auto 0;
+}
+
 .counter {
     margin-top: 12px;
 }

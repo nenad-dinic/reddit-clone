@@ -1,0 +1,11 @@
+<h1>Edit post</h1>
+<form [formGroup]="editPostGroup">
+    <mat-form-field>
+        <input matInput type="text" placeholder="Title" formControlName="title">
+    </mat-form-field>
+    <mat-form-field>
+        <textarea matInput placeholder="Description" formControlName="description"></textarea>
+    </mat-form-field>
+
+    <button mat-button type="submit" (click)="apply()">Apply changes</button>
+</form>

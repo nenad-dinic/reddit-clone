@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostService } from 'src/app/services/post.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-post-creator',
@@ -24,7 +25,8 @@ export class PostCreatorComponent implements OnInit {
   onPostCreation = new EventEmitter();
 
   constructor(private postService: PostService,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -34,7 +36,8 @@ export class PostCreatorComponent implements OnInit {
       return
     } else {
       let data = this.postGroup.value;
-      this.postService.createPost(data.title, data.description, 1, this.communityId).subscribe(response => {
+      let userId = this.userService.loggedInUser != undefined ? this.userService.loggedInUser.id : -1
+      this.postService.createPost(data.title, data.description, userId, this.communityId).subscribe(response => {
         if (response == undefined) {
           this.snackBar.open("Failed to create post", "OK")
         } else {

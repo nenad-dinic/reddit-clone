@@ -25,6 +25,8 @@ import { CommunityService } from './services/community.service';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { PostCreatorComponent } from './components/post-creator/post-creator.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatMenuModule} from '@angular/material/menu';
+import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post-dialog.component'; 
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     PostSorterComponent,
     PostComponent,
     CommunityPageComponent,
-    PostCreatorComponent
+    PostCreatorComponent,
+    EditPostDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +55,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatIconModule,
     AppRoutingModule,
     MatExpansionModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule
   ],
   providers: [UserService, PostService, CommunityService],
   bootstrap: [AppComponent]

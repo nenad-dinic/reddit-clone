@@ -5,10 +5,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class JWTToken {
+public class JWTTokenDTO {
     private String token;
 
-    public JWTToken(String token) {
+    public JWTTokenDTO(String token) {
         this.token = token;
+    }
+
+    @Getter
+    @Setter
+    public static class UserToken {
+        public String token;
     }
 }

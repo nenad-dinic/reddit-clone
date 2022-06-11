@@ -1,5 +1,15 @@
 <mat-card>
-    <mat-card-title>{{data.title}}</mat-card-title>
+    <mat-card-title>
+        <p>{{data.title}}</p>
+        <span></span>
+        <button mat-icon-button *ngIf="data.postedBy == userService.loggedInUser?.id" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editPost()">Edit</button>
+            <button mat-menu-item (click)="deletePost()">Delete</button>
+        </mat-menu>
+    </mat-card-title>
     <mat-card-content>{{data.text}}</mat-card-content>
     <mat-card-actions>
         <button mat-icon-button><mat-icon>keyboard_arrow_up</mat-icon></button>

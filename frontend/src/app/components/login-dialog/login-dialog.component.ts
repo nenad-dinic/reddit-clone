@@ -2,6 +2,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -21,7 +22,9 @@ export class LoginDialogComponent implements OnInit {
   @Output()
   changeToRegister = new EventEmitter();
 
-  constructor(private userService:UserService, public dialogRef: DialogRef<LoginDialogComponent>) { }
+  constructor(private userService:UserService, 
+    public dialogRef: DialogRef<LoginDialogComponent>,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -33,9 +36,10 @@ export class LoginDialogComponent implements OnInit {
       let data = this.loginGroup.value
       this.userService.login(data.username, data.password).subscribe(response=>{
         if (response==null) {
-          alert("login failed")
+          this.snackBar.open("Login failed", "Ok")
         } else {
-          localStorage.setItem("token", response.token);
+          this.userService.getTokenId(response.token);
+          
           this.dialogRef.close();
         }      })
     }

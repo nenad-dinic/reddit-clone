@@ -6,8 +6,14 @@ import { ApiUser } from "../models/user.model";
 
 @Injectable() 
 export class UserService {
-    constructor(private http: HttpClient) {
 
+    loggedInUser?: ApiUser;
+
+    constructor(private http: HttpClient) { 
+            let token = localStorage.getItem("token")
+            if (token != undefined) {
+                this.getTokenId(token);
+            }
     }
 
     login(username: string|null|undefined, password: string|null|undefined) {
@@ -25,5 +31,23 @@ export class UserService {
             description: null,
             displayName: username
         })
+    }
+
+    getTokenId(token: string) {
+        this.http.post<ApiUser>(environment.APIUrl + "user/tokenId", {
+            token: token
+        }).subscribe(response => {
+            if (response != undefined) {
+                localStorage.setItem("token", token);
+                this.loggedInUser = response;
+            } else {
+                this.logOut();
+            }
+        })
+    }
+
+    logOut() {
+        localStorage.removeItem("token");
+        this.loggedInUser = undefined;
     }
 }
