@@ -28,4 +28,8 @@ export class CommunityService {
         })
     }
 
+    deleteCommunity(communityId: number) {
+        return this.http.delete<ApiCommunity>(environment.APIUrl + "community?id=" + communityId)
+    }
+
 }

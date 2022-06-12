@@ -9,7 +9,7 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="editCommunity()">Edit</button>
-                <button mat-menu-item>Delete</button>
+                <button mat-menu-item (click)="deleteCommunity()">Delete</button>
             </mat-menu>
         </h1>
         <p>{{communityData?.description}}</p>

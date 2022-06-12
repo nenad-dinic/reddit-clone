@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommunityDialogComponent } from 'src/app/components/community-dialog/community-dialog.component';
 import { ApiCommunity } from 'src/app/models/community.model';
@@ -25,7 +26,8 @@ export class CommunityPageComponent implements OnInit {
     private postService: PostService,
     private communityService: CommunityService,
     public userService: UserService,
-    private matDialog: MatDialog) { }
+    private matDialog: MatDialog,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -64,5 +66,16 @@ export class CommunityPageComponent implements OnInit {
     this.matDialog.open(CommunityDialogComponent, {
       data: this.communityData
     });
+  }
+
+  deleteCommunity() {
+    this.communityService.deleteCommunity(this.communityData.id).subscribe(response => {
+      if (response != undefined) {
+        this.snackBar.open("Successfully deleted community", "Ok")
+        this.router.navigateByUrl("/home")
+      } else {
+        this.snackBar.open("Failed to delete community", "Ok")
+      }
+    })
   }
 }
