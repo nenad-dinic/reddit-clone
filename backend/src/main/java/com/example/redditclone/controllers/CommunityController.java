@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,11 +29,13 @@ public class CommunityController {
     @PostMapping(value = "/community",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community createCommunity(@RequestBody CommunityDTO.Add data) {
+    CommunityDTO.Get createCommunity(@RequestBody CommunityDTO.Add data) {
         try {
             Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, ""));
             moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
-            return c;
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            result.setModerators(getCommunityModerators(result.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -40,11 +43,13 @@ public class CommunityController {
 
     @DeleteMapping(value = "/community",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community deleteCommunity(@RequestParam("id") String id) {
+    CommunityDTO.Get deleteCommunity(@RequestParam("id") String id) {
         try {
             Community c = communityRepository.findById(Long.parseLong(id)).get();
             communityRepository.delete(c);
-            return c;
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            result.setModerators(getCommunityModerators(result.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -53,12 +58,15 @@ public class CommunityController {
     @PutMapping(value = "/community",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community updateCommunity(@RequestParam("id") String id, @RequestBody CommunityDTO.Update data) {
+    CommunityDTO.Get updateCommunity(@RequestParam("id") String id, @RequestBody CommunityDTO.Update data) {
         try {
             Community c = communityRepository.findById(Long.parseLong(id)).get();
             c.setName(data.getName());
             c.setDescription(data.getDescription());
-            return communityRepository.save(c);
+            communityRepository.save(c);
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            result.setModerators(getCommunityModerators(result.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -66,9 +74,12 @@ public class CommunityController {
 
     @GetMapping(value = "/community",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Community getCommunity(@RequestParam("name") String name) {
+    CommunityDTO.Get getCommunity(@RequestParam("name") String name) {
         try {
-            return communityRepository.findByName(name);
+            Community c = communityRepository.findByName(name);
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            result.setModerators(getCommunityModerators(result.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -76,9 +87,17 @@ public class CommunityController {
 
     @GetMapping(value = "/communities",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Community> getCommunities() {
+    List<CommunityDTO.Get> getCommunities() {
         try {
-            return communityRepository.findAll();
+            List<Community> c =  communityRepository.findAll();
+            List<CommunityDTO.Get> result = new ArrayList<>();
+            for(Community comm : c) {
+                CommunityDTO.Get cDTO = new CommunityDTO.Get(comm.getId(), comm.getName(), comm.getDescription(), comm.getCreationDate(), comm.isSuspended(), comm.getSuspendedReason());
+                cDTO.setModerators(getCommunityModerators(cDTO.getId()));
+                result.add(cDTO);
+
+            }
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -92,5 +111,14 @@ public class CommunityController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    List<Long> getCommunityModerators(Long communityId) {
+        List<Moderator> moderators =  moderatorRepository.findAllByCommunityId(communityId);
+        List<Long> moderatorIds = new ArrayList<>();
+        for (Moderator m : moderators) {
+            moderatorIds.add(m.getId());
+        }
+        return moderatorIds;
     }
 }

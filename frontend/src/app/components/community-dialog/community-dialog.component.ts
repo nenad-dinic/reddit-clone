@@ -1,6 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ApiCommunity } from 'src/app/models/community.model';
@@ -19,14 +20,12 @@ export class CommunityDialogComponent implements OnInit {
     description: new FormControl("", [Validators.required])
   })
 
-  @Input()
-  data ?: ApiCommunity;
-
   constructor(private communityService: CommunityService,
     private userService: UserService,
     private snackBar: MatSnackBar,
     private dialogRef: DialogRef<CommunityDialogComponent>,
-    private router: Router) { }
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) private data : ApiCommunity) { }
 
   ngOnInit(): void {
     if(this.data != undefined) {
@@ -48,6 +47,7 @@ export class CommunityDialogComponent implements OnInit {
         } else {
           this.snackBar.open("Community updated", "Ok")
           this.dialogRef.close();
+          this.router.navigateByUrl("/community?name=" + this.communityGroup.value.name)
         }
       })
     } else {

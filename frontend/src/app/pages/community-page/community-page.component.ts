@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommunityDialogComponent } from 'src/app/components/community-dialog/community-dialog.component';
 import { ApiCommunity } from 'src/app/models/community.model';
 import { ApiPost } from 'src/app/models/post.model';
 import { CommunityService } from 'src/app/services/community.service';
@@ -22,7 +24,8 @@ export class CommunityPageComponent implements OnInit {
     private router: Router,
     private postService: PostService,
     private communityService: CommunityService,
-    public userService: UserService) { }
+    public userService: UserService,
+    private matDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -52,7 +55,14 @@ export class CommunityPageComponent implements OnInit {
         this.router.navigateByUrl("/home");
       } else {
         this.communityData = response;
+        console.log(response);
       }
     })
+  }
+
+  editCommunity() {
+    this.matDialog.open(CommunityDialogComponent, {
+      data: this.communityData
+    });
   }
 }

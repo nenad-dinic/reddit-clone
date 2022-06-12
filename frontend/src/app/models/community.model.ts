@@ -5,4 +5,5 @@ export interface ApiCommunity {
     creationDate: Date;
     suspendedReason: string;
     suspended: boolean;
+    moderators: number[];
 }
