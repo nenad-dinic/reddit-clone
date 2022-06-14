@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-title>
-        <p>{{data.title}}</p>
+        <p>{{data.title}} - {{data.user.username}} - <a [href]="'/community?name=' + data.community.name">{{data.community.name}}</a></p>
         <span></span>
         <button mat-icon-button *ngIf="data.postedBy == userService.loggedInUser?.id" [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
@@ -12,9 +12,9 @@
     </mat-card-title>
     <mat-card-content>{{data.text}}</mat-card-content>
     <mat-card-actions>
-        <button mat-icon-button><mat-icon>keyboard_arrow_up</mat-icon></button>
-        <p class="counter">{{data.counter != null ? data.counter : 0}}</p>
-        <button mat-icon-button><mat-icon>keyboard_arrow_down</mat-icon></button>
+        <button mat-icon-button (click)="addReaction('UPVOTE')"><mat-icon>keyboard_arrow_up</mat-icon></button>
+        <p class="counter">{{data.karma != undefined ? data.karma : 0}}</p>
+        <button mat-icon-button (click)="addReaction('DOWNVOTE')"><mat-icon>keyboard_arrow_down</mat-icon></button>
         <span></span>
         <button mat-button>Comments</button>
         <button mat-button>Report</button>

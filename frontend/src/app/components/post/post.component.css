@@ -22,3 +22,8 @@ mat-card-title p {
 span {
     flex-grow: 1;
 }
+
+a {
+    text-decoration: underline;
+    color: black;
+}

@@ -1,2 +1,2 @@
 <app-post-sorter></app-post-sorter>
-<app-post *ngFor="let post of posts" [data]="post"></app-post>
+<app-post *ngFor="let post of posts" [data]="post" (onPostChanged)="loadPosts()"></app-post>

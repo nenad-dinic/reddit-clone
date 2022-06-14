@@ -1,3 +1,6 @@
+import { ApiCommunity } from "./community.model";
+import { ApiUser } from "./user.model";
+
 export interface ApiPost {
         id: number,
         title: string,
@@ -6,6 +9,8 @@ export interface ApiPost {
         imagePath: string,
         postedBy: number,
         communityId: number,
-        counter: number
-    
+        karma: number,
+        user: ApiUser,
+        community: ApiCommunity
+
 }

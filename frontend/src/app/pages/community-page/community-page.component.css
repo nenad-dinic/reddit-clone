@@ -33,3 +33,7 @@ h1 button {
     vertical-align: middle;
     margin-left: -1rem;
 }
+
+#delete {
+    color: red;
+}

@@ -48,4 +48,16 @@ export class PostComponent implements OnInit {
     })
   }
 
+    addReaction(type: "UPVOTE" | "DOWNVOTE"){
+      
+        this.postService.addReaction(type, this.userService.loggedInUser != undefined ? this.userService.loggedInUser.id : -1, this.data.id).subscribe(response => {
+          if(response == undefined){
+            this.snackBar.open("Failed to add reaction", "Ok");
+          }else {
+            this.onPostChanged.emit();
+          }
+        })
+
+    }
+
 }

@@ -43,10 +43,11 @@ export class CommunityPageComponent implements OnInit {
   }
 
   loadPosts() {
-    this.posts = [];
     this.postService.getAllForCommunity(this.communityName).subscribe(response => {
       if (response != null) {
         this.posts = response;
+      } else {
+        this.posts = [];
       }
     })
   }
@@ -57,7 +58,6 @@ export class CommunityPageComponent implements OnInit {
         this.router.navigateByUrl("/home");
       } else {
         this.communityData = response;
-        console.log(response);
       }
     })
   }

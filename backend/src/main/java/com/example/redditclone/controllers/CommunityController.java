@@ -103,21 +103,11 @@ public class CommunityController {
         }
     }
 
-    @GetMapping(value = "/community/posts",
-    produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Post> getCommunityPosts(@RequestParam("name") String name) {
-        try {
-            return postRepository.findAllForCommunity(name);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     List<Long> getCommunityModerators(Long communityId) {
         List<Moderator> moderators =  moderatorRepository.findAllByCommunityId(communityId);
         List<Long> moderatorIds = new ArrayList<>();
         for (Moderator m : moderators) {
-            moderatorIds.add(m.getId());
+            moderatorIds.add(m.getUserId());
         }
         return moderatorIds;
     }

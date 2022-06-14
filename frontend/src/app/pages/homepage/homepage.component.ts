@@ -14,9 +14,15 @@ export class HomepageComponent implements OnInit {
   constructor(private postService: PostService) { }
 
   ngOnInit(): void {
+    this.loadPosts();
+  }
+
+  loadPosts() {
     this.postService.getAllPosts().subscribe(response => {
       if(response != null) {
         this.posts = response;
+      }else {
+        this.posts = [];
       }
     })
   }

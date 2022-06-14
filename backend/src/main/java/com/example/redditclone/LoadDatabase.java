@@ -36,4 +36,9 @@ public class LoadDatabase {
     CommandLineRunner initAdmin(AdminRepository repository) {
         return args -> {log.info("Initialized admin");};
     }
+
+    @Bean
+    CommandLineRunner initReaction(ReactionRepository repository) {
+        return args -> {log.info("Initialized reaction");};
+    }
 }

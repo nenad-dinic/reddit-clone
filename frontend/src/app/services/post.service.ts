@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { ApiPost } from "../models/post.model";
+import { ApiReaction } from "../models/reaction.model";
 
 @Injectable() 
 export class PostService {
@@ -14,7 +15,7 @@ export class PostService {
     }
 
     getAllForCommunity(name: string) {
-        return this.http.get<ApiPost[]>(environment.APIUrl + "community/posts?name=" + name);
+        return this.http.get<ApiPost[]>(environment.APIUrl + "posts/community?name=" + name);
     }
 
     createPost(title: string|null|undefined, description: string|null|undefined, userId: number, communityId: number) {
@@ -36,4 +37,14 @@ export class PostService {
             text: description
         })
     }
+
+    addReaction(reactionType : string, userId: number, reactionToId : number) {
+        return this.http.post<ApiReaction>(environment.APIUrl + "reaction", {
+            reactionType: reactionType,
+            reactionBy: userId,
+            reactionTo: "POST",
+            reactionToId: reactionToId
+        });
+    }
+
 }
