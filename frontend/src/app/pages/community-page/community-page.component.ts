@@ -64,7 +64,8 @@ export class CommunityPageComponent implements OnInit {
 
   editCommunity() {
     this.matDialog.open(CommunityDialogComponent, {
-      data: this.communityData
+      data: this.communityData,
+      width: "350px"
     });
   }
 

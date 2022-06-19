@@ -2,10 +2,12 @@
 <form [formGroup]="communityGroup" (ngSubmit)="submit()">
     <mat-form-field>
         <input matInput type="text" placeholder="Name" formControlName="name"> 
+        <mat-error>Community name is required and must be unique.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
         <textarea matInput placeholder="Description" formControlName="description"></textarea>
+        <mat-error>Description is required.</mat-error>
     </mat-form-field>
 
     <button mat-button type="submit">Submit</button>

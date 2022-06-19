@@ -1,0 +1,15 @@
+<h1>Edit post</h1>
+<form [formGroup]="editProfileGroup">
+    <mat-form-field>
+        <input matInput placeholder="Display name" formControlName="displayName">
+        <mat-error>Display name is required.</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="text" placeholder="Description" formControlName="description">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput type="email" placeholder="Email" formControlName="email">
+    </mat-form-field>
+
+    <button mat-button type="submit" (click)="apply()">Apply changes</button>
+</form>

@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { CommunityDialogComponent } from '../community-dialog/community-dialog.component';
+import { EditProfileDialogComponent } from '../edit-profile-dialog/edit-profile-dialog.component';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
 
@@ -21,7 +23,9 @@ export class NavBarComponent implements OnInit {
   }
 
   openLoginDialog() {
-    let ref = this.dialog.open(LoginDialogComponent);
+    let ref = this.dialog.open(LoginDialogComponent, {
+      width: "350px"
+    });
     ref.componentInstance.changeToRegister.subscribe(()=> {
       ref.close();
       this.openRegisterDialog();
@@ -29,7 +33,9 @@ export class NavBarComponent implements OnInit {
   }
 
   openRegisterDialog() {
-    let ref = this.dialog.open(RegisterDialogComponent);
+    let ref = this.dialog.open(RegisterDialogComponent, {
+      width: "350px"
+    });
     ref.componentInstance.changeToLogin.subscribe(()=> {
       ref.close();
       this.openLoginDialog();
@@ -50,6 +56,18 @@ export class NavBarComponent implements OnInit {
   }
 
   createCommunityDialog() {
-    this.dialog.open(CommunityDialogComponent);
+    this.dialog.open(CommunityDialogComponent, {
+      width: "350px"
+    });
+  }
+
+  changePasswordDialog() {
+    this.dialog.open(ChangePasswordDialogComponent, {
+      width: "300px"
+    })
+  }
+
+  editProfileDialog() {
+    this.dialog.open(EditProfileDialogComponent)
   }
 }

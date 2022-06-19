@@ -1,6 +1,7 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.JWTTokenDTO;
+import com.example.redditclone.dto.PostDTO;
 import com.example.redditclone.dto.UserDTO;
 import com.example.redditclone.misc.HashPassword;
 import com.example.redditclone.model.Admin;
@@ -86,7 +87,21 @@ public class UserController {
         } catch (Exception e) {
             return null;
         }
+    }
 
+    @PutMapping(value = "user/edit",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    User editProfile(@RequestBody@RequestParam("id") String id,@RequestBody UserDTO.EditProfile data) {
+        try {
+            User u = userRepository.findById(Long.parseLong(id)).get();
+            u.setDisplayName(data.getDisplayName());
+            u.setEmail(data.getEmail());
+            u.setDescription(data.getDescription());
+            return userRepository.save(u);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

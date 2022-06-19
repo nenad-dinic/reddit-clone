@@ -3,14 +3,17 @@
 
     <mat-form-field>
         <input matInput type="text" placeholder="username" formControlName="username">
+        <mat-error>Username is required.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
         <input matInput type="password" placeholder="password" formControlName="password">
+        <mat-error>Password is required and must be at least 5 characters long.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
         <input matInput type="email" placeholder="email" formControlName="email">
+        <mat-error>Email is required and must text@text format.</mat-error>
     </mat-form-field>
     
     <button mat-button type="submit">Register</button>

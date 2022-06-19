@@ -50,4 +50,20 @@ export class UserService {
         localStorage.removeItem("token");
         this.loggedInUser = undefined;
     }
+
+    changePassword(username: string|null|undefined, password: string|null|undefined, newPassword: string|null|undefined) {
+        return this.http.put<ApiUser>(environment.APIUrl + "user/changePassword", {
+            username: username,
+            password: password,
+            newPassword: newPassword
+        })
+    }
+
+    editProfile(id: number, displayName: string|null|undefined, email: string|null|undefined, description: string|null|undefined) {
+        return this.http.put<ApiUser>(environment.APIUrl + "user/edit?id=" + id, {
+            displayName: displayName,
+            email: email,
+            description: description
+        })
+    }
 }

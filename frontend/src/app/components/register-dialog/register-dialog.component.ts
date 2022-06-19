@@ -14,7 +14,7 @@ export class RegisterDialogComponent implements OnInit {
   registerGroup= new FormGroup(
     {
       username: new FormControl("", [Validators.required]),
-      password: new FormControl("", [Validators.required]),
+      password: new FormControl("", [Validators.required, Validators.minLength(5)]),
       email: new FormControl("", [Validators.email, Validators.required])
     }
   )

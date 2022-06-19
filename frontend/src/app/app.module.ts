@@ -27,7 +27,9 @@ import { PostCreatorComponent } from './components/post-creator/post-creator.com
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMenuModule} from '@angular/material/menu';
 import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post-dialog.component';
-import { CommunityDialogComponent } from './components/community-dialog/community-dialog.component'; 
+import { CommunityDialogComponent } from './components/community-dialog/community-dialog.component';
+import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';
+import { EditProfileDialogComponent } from './components/edit-profile-dialog/edit-profile-dialog.component'; 
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { CommunityDialogComponent } from './components/community-dialog/communit
     CommunityPageComponent,
     PostCreatorComponent,
     EditPostDialogComponent,
-    CommunityDialogComponent
+    CommunityDialogComponent,
+    ChangePasswordDialogComponent,
+    EditProfileDialogComponent
   ],
   imports: [
     BrowserModule,

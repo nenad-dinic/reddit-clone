@@ -3,8 +3,6 @@ package com.example.redditclone.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 public class UserDTO {
     @Getter
     @Setter
@@ -30,5 +28,13 @@ public class UserDTO {
         private String username;
         private String password;
         private String newPassword;
+    }
+
+    @Getter
+    @Setter
+    public static class EditProfile {
+        private String displayName;
+        private String description;
+        private String email;
     }
 }
