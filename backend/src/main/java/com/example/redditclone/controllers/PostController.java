@@ -34,11 +34,13 @@ public class PostController {
     @PostMapping(value = "/post",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Post createPost(@RequestBody PostDTO.Add data) {
+    PostDTO.Get createPost(@RequestBody PostDTO.Add data) {
         try {
             Post p = postRepository.save(new Post(data.getTitle(), data.getText(), LocalDate.now(), "", data.getUserId(), data.getCommunityId()));
             reactionRepository.save(new Reaction(ReactionType.UPVOTE, LocalDate.now(), data.getUserId(), ReactionTo.POST, p.getId()));
-            return p;
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -47,12 +49,15 @@ public class PostController {
     @PutMapping(value = "/post",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Post updatePost(@RequestParam("id") String id,@RequestBody PostDTO.Update data) {
+    PostDTO.Get updatePost(@RequestParam("id") String id,@RequestBody PostDTO.Update data) {
         try {
             Post p = postRepository.findById(Long.parseLong(id)).get();
             p.setTitle(data.getTitle());
             p.setText(data.getText());
-            return postRepository.save(p);
+            postRepository.save(p);
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -60,11 +65,13 @@ public class PostController {
 
     @DeleteMapping(value = "/post",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    Post deletePost(@RequestParam("id") String id) {
+    PostDTO.Get deletePost(@RequestParam("id") String id) {
         try {
             Post p =postRepository.findById(Long.parseLong(id)).get();
             postRepository.delete(p);
-            return p;
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -94,8 +101,7 @@ public class PostController {
             }
             return result;
         } catch (Exception e) {
-            throw e;
-            //return null;
+            return null;
         }
     }
 

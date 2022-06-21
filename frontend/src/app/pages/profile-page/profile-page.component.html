@@ -1,0 +1,7 @@
+<img src="assets/profile-photo.jpg">
+<h1>Display name: {{this.userService.loggedInUser?.displayName}}</h1>
+<p>Karma sum: {{this.userService.loggedInUser?.karma}}</p>
+<h2>Username: {{this.userService.loggedInUser?.username}}</h2>
+<p>Description: {{this.userService.loggedInUser?.description}}</p>
+<button mat-button (click)="editProfileDialog()" >Edit profile</button>
+<button mat-button (click)="changePasswordDialog()" >Change password</button>

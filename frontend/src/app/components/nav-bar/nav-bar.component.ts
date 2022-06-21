@@ -39,7 +39,7 @@ export class NavBarComponent implements OnInit {
     ref.componentInstance.changeToLogin.subscribe(()=> {
       ref.close();
       this.openLoginDialog();
-    })
+    });
   }
 
   search(input: HTMLInputElement) {
@@ -61,13 +61,7 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  changePasswordDialog() {
-    this.dialog.open(ChangePasswordDialogComponent, {
-      width: "300px"
-    })
-  }
-
-  editProfileDialog() {
-    this.dialog.open(EditProfileDialogComponent)
+  viewProfilePage() {
+    this.router.navigateByUrl("/profile")
   }
 }

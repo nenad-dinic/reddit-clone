@@ -7,6 +7,7 @@ import com.example.redditclone.misc.HashPassword;
 import com.example.redditclone.model.Admin;
 import com.example.redditclone.model.User;
 import com.example.redditclone.repository.AdminRepository;
+import com.example.redditclone.repository.ReactionRepository;
 import com.example.redditclone.repository.UserRepository;
 import com.example.redditclone.security.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,26 @@ public class UserController {
     @Autowired
     AdminRepository adminRepository;
 
+    @Autowired
+    ReactionRepository reactionRepository;
+
     @GetMapping(value = "/user",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    User getUser(@RequestParam("id") String id) {
-        return userRepository.findById(Long.parseLong(id)).get();
+    UserDTO.Get getUser(@RequestParam("id") String id) {
+        User u = userRepository.findById(Long.parseLong(id)).get();
+        UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+        return result;
     }
 
     @PostMapping(value = "/user/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    User createUser(@RequestBody UserDTO.Add data){
+    UserDTO.Get createUser(@RequestBody UserDTO.Add data){
         try {
             String hashPassword = HashPassword.createHash(data.getPassword());
-            return userRepository.save(new User (data.getUsername(), hashPassword, data.getEmail(), data.getAvatar(), LocalDate.now(), data.getDescription(), data.getDisplayName()));
+            User u = userRepository.save(new User (data.getUsername(), hashPassword, data.getEmail(), data.getAvatar(), LocalDate.now(), data.getDescription(), data.getDisplayName()));
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            return result;
 
         } catch (Exception e) {
             //throw new APIResponse(1001, "failure", "Failed to register");
@@ -65,13 +73,15 @@ public class UserController {
     @PutMapping(value = "user/changePassword",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    User changePassword(@RequestBody UserDTO.ChangePassword data) {
+    UserDTO.Get changePassword(@RequestBody UserDTO.ChangePassword data) {
         String hashPassword = HashPassword.createHash(data.getPassword());
         String newHashPassword = HashPassword.createHash(data.getNewPassword());
         try {
             User u = userRepository.findOneByUsernameAndPassword(data.getUsername(), hashPassword);
             u.setPassword(newHashPassword);
-            return userRepository.save(u);
+            userRepository.save(u);
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -80,10 +90,12 @@ public class UserController {
     @PostMapping(value = "user/tokenId",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    User tokenId(@RequestBody JWTTokenDTO.UserToken data) {
+    UserDTO.Get tokenId(@RequestBody JWTTokenDTO.UserToken data) {
         String username = TokenUtils.getUsernameFromToken(data.token);
         try {
-            return userRepository.findOneByUsername(username);
+            User u = userRepository.findOneByUsername(username);
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }
@@ -92,13 +104,15 @@ public class UserController {
     @PutMapping(value = "user/edit",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    User editProfile(@RequestBody@RequestParam("id") String id,@RequestBody UserDTO.EditProfile data) {
+    UserDTO.Get editProfile(@RequestBody@RequestParam("id") String id,@RequestBody UserDTO.EditProfile data) {
         try {
             User u = userRepository.findById(Long.parseLong(id)).get();
             u.setDisplayName(data.getDisplayName());
             u.setEmail(data.getEmail());
             u.setDescription(data.getDescription());
-            return userRepository.save(u);
+            userRepository.save(u);
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            return result;
         } catch (Exception e) {
             return null;
         }

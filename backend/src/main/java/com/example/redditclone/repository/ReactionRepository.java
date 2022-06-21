@@ -15,7 +15,18 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     @Query(value = "SELECT " +
             "(SELECT COUNT(*) FROM reaction WHERE reaction_to_post_id = :postId AND TYPE = 0) - " +
             "(SELECT COUNT(*) FROM reaction WHERE reaction_to_post_id = :postId AND TYPE = 1) AS value " +
-            "FROM reaction WHERE reaction_to_post_id = :postId UNION (SELECT 0 FROM reaction LIMIT 1)" +
-            "LIMIT 1;", nativeQuery = true)
+            "FROM reaction LIMIT 1;", nativeQuery = true)
     Long getKarmaForPost(Long postId);
+
+    @Query(value = "SELECT (" +
+            "SELECT COUNT(*) FROM user u " +
+            "INNER JOIN post p ON u.id = p.posted_by " +
+            "INNER JOIN reaction r ON p.id = r.reaction_to_post_id " +
+            "WHERE u.id = :id AND r.type = 0) - " +
+            "(SELECT COUNT(*) FROM user u " +
+            "INNER JOIN post p ON u.id = p.posted_by " +
+            "INNER JOIN reaction r ON p.id = r.reaction_to_post_id " +
+            "WHERE u.id = :id AND r.type = 1) " +
+            "FROM user u WHERE u.id = :id ; ", nativeQuery = true)
+    Long getKarmaForUser(Long id);
 }

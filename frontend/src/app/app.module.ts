@@ -29,7 +29,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post-dialog.component';
 import { CommunityDialogComponent } from './components/community-dialog/community-dialog.component';
 import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';
-import { EditProfileDialogComponent } from './components/edit-profile-dialog/edit-profile-dialog.component'; 
+import { EditProfileDialogComponent } from './components/edit-profile-dialog/edit-profile-dialog.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component'; 
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { EditProfileDialogComponent } from './components/edit-profile-dialog/edi
     EditPostDialogComponent,
     CommunityDialogComponent,
     ChangePasswordDialogComponent,
-    EditProfileDialogComponent
+    EditProfileDialogComponent,
+    ProfilePageComponent
   ],
   imports: [
     BrowserModule,

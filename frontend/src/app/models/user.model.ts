@@ -6,5 +6,6 @@ export interface ApiUser {
     avatar: string,
     registrationDate: Date,
     description: string,
-    displayName: string
+    displayName: string,
+    karma: number
   }
