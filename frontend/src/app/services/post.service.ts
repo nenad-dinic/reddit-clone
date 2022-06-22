@@ -24,17 +24,28 @@ export class PostService {
             text: description,
             userId: userId,
             communityId: communityId
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         })
     }
 
     deletePost(id: number) {
-        return this.http.delete<ApiPost>(environment.APIUrl + "post?id=" + id);
+        return this.http.delete<ApiPost>(environment.APIUrl + "post?id=" + id,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
+        });
     }
 
     updatePost(id: number, title: string|null|undefined, description: string|null|undefined) {
         return this.http.put<ApiPost>(environment.APIUrl + "post?id=" + id, {
             title: title,
             text: description
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         })
     }
 
@@ -44,6 +55,10 @@ export class PostService {
             reactionBy: userId,
             reactionTo: "POST",
             reactionToId: reactionToId
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         });
     }
 

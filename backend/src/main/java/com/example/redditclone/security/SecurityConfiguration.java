@@ -24,68 +24,29 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    private AuthenticationTokenFilter filter;
 
-    /*@Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    public void configureAuthentication(
-            AuthenticationManagerBuilder authenticationManagerBuilder)
-            throws Exception {
-
-        authenticationManagerBuilder
-                .userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
+    public SecurityConfiguration(AuthenticationTokenFilter filter) {
+        this.filter = filter;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public AuthenticationTokenFilter authenticationTokenFilterBean()
-            throws Exception {
-        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
-        authenticationTokenFilter
-                .setAuthenticationManager(authenticationManagerBean());
-        return authenticationTokenFilter;
-    }
-*/
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
-        //Naglasavamo browser-u da ne cache-ira podatke koje dobije u header-ima
-        //detaljnije: https://www.baeldung.com/spring-security-cache-control-headers
-        /*httpSecurity.headers().cacheControl().disable();
-        //Neophodno da ne bi proveravali autentifikaciju kod Preflight zahteva
-        httpSecurity.cors();
-        //sledeca linija je neophodna iskljucivo zbog nacina na koji h2 konzola komunicira sa aplikacijom
-        httpSecurity.headers().frameOptions().disable();
-        httpSecurity.csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/login").permitAll()
-                .anyRequest().authenticated();
-
-        httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);*/
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE", "PUT"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+
         httpSecurity.authorizeRequests().anyRequest().permitAll();
+        //httpSecurity.authorizeRequests().antMatchers("/", "/user/login").permitAll()
+                //.antMatchers("/**").authenticated();
+        //httpSecurity.authorizeRequests().antMatchers("/**").authenticated();
         httpSecurity.csrf().disable();
         httpSecurity.cors().configurationSource(source);
+
+        //httpSecurity.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
     }
 }

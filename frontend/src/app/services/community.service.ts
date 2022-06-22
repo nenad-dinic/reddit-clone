@@ -18,6 +18,10 @@ export class CommunityService {
             name: name,
             description: description,
             userId: userId
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         });
     }
 
@@ -25,11 +29,18 @@ export class CommunityService {
         return this.http.put<ApiCommunity>(environment.APIUrl + "community?id=" + communityId, {
             name: name,
             description: description,
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         })
     }
 
     deleteCommunity(communityId: number) {
-        return this.http.delete<ApiCommunity>(environment.APIUrl + "community?id=" + communityId)
+        return this.http.delete<ApiCommunity>(environment.APIUrl + "community?id=" + communityId,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
+        })
     }
 
 }

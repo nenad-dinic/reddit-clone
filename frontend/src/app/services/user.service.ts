@@ -36,9 +36,15 @@ export class UserService {
     getTokenId(token: string) {
         this.http.post<ApiUser>(environment.APIUrl + "user/tokenId", {
             token: token
-        }).subscribe(response => {
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
+        }
+        ).subscribe(response => {
+            console.log(response)
             if (response != undefined) {
-                localStorage.setItem("token", token);
+                
                 this.loggedInUser = response;
             } else {
                 this.logOut();
@@ -56,6 +62,10 @@ export class UserService {
             username: username,
             password: password,
             newPassword: newPassword
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         })
     }
 
@@ -64,6 +74,10 @@ export class UserService {
             displayName: displayName,
             email: email,
             description: description
+        }
+        ,
+        {
+            headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         })
     }
 }

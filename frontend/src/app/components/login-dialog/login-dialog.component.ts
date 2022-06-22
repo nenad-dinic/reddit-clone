@@ -38,8 +38,8 @@ export class LoginDialogComponent implements OnInit {
         if (response==null) {
           this.snackBar.open("Login failed", "Ok")
         } else {
+          localStorage.setItem("token", response.token);
           this.userService.getTokenId(response.token);
-          
           this.dialogRef.close();
         }      })
     }

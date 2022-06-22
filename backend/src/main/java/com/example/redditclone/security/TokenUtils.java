@@ -63,7 +63,8 @@ public class TokenUtils {
     /*Provera validnosti tokena: period vazenja i provera username-a korisnika*/
     public static boolean validateToken(String token, User user) {
         final String username = getUsernameFromToken(token);
-        return username.equals(user.getUsername())
+        return user != null &&
+                username.equals(user.getUsername())
                 && !isTokenExpired(token);
     }
 
@@ -77,6 +78,17 @@ public class TokenUtils {
         return Jwts.builder().setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
+    }
+
+    public static String getRoleFromToken(String token) {
+        String role;
+        try {
+            Claims claims = TokenUtils.getClaimsFromToken(token); // username izvlacimo iz subject polja unutar payload tokena
+            role = claims.get("role").toString();
+        } catch (Exception e) {
+            role = "";
+        }
+        return role;
     }
 
 }

@@ -11,47 +11,61 @@ import org.springframework.security.core.context.SecurityContextHolder;
         import org.springframework.security.core.userdetails.UserDetailsService;
         import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
         import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-        import javax.servlet.FilterChain;
+import javax.servlet.FilterChain;
         import javax.servlet.ServletException;
         import javax.servlet.ServletRequest;
         import javax.servlet.ServletResponse;
         import javax.servlet.http.HttpServletRequest;
-        import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
+@Component
+public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
-    //@Autowired
-    //private  UserDetailsService userDetailsService;
 
+
+    @Autowired
     private UserRepository userRepository;
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String token = httpServletRequest.getHeader("Authorization");
-        if(token != null){
-            if(token.startsWith("Bearer ")){
-                token = token.substring(7);
-            }
+
+        String authHeader = request.getHeader("Authorization");
+        String username;
+        String token = null;
+
+        if(authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        } else {
+            return;
         }
 
-        String username = TokenUtils.getUsernameFromToken(token);
+        username = TokenUtils.getUsernameFromToken(token);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            //UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            User user = userRepository.findOneByUsername(username);
-            if (TokenUtils.validateToken(token, user)) {
-                List <GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority("admin"));
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        user, null, authorities);
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+        if(username == null) {
+            return;
         }
+
+        User u = userRepository.findOneByUsername(username);
+        if(TokenUtils.validateToken(token, u)) {
+            List <GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(TokenUtils.getRoleFromToken(token)));
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    u, null, authorities);
+            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+
         chain.doFilter(request, response);
+    }
+
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/user/login") || path.startsWith("/user/register") || ((path.startsWith("/posts") || path.startsWith("/posts/community") || path.startsWith("/community")) && request.getMethod().equals("GET"));
     }
 }

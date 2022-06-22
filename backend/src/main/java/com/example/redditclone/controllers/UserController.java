@@ -12,8 +12,10 @@ import com.example.redditclone.repository.UserRepository;
 import com.example.redditclone.security.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 
 @RestController
@@ -87,10 +89,11 @@ public class UserController {
         }
     }
 
+
     @PostMapping(value = "user/tokenId",
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    UserDTO.Get tokenId(@RequestBody JWTTokenDTO.UserToken data) {
+    UserDTO.Get tokenId(@RequestBody JWTTokenDTO.UserToken data, HttpServletRequest request) {
         String username = TokenUtils.getUsernameFromToken(data.token);
         try {
             User u = userRepository.findOneByUsername(username);

@@ -32,7 +32,11 @@ public class CommunityController {
     CommunityDTO.Get createCommunity(@RequestBody CommunityDTO.Add data) {
         try {
             Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, ""));
-            moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
+            try {
+                moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
+            } catch (Exception e) {
+                communityRepository.delete(c);
+            }
             CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
