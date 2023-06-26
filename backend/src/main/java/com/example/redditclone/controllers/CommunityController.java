@@ -1,12 +1,11 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.CommunityDTO;
+import com.example.redditclone.repository.CommunityRepository;
+import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Moderator;
-import com.example.redditclone.model.Post;
-import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.ModeratorRepository;
-import com.example.redditclone.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -93,7 +92,7 @@ public class CommunityController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     List<CommunityDTO.Get> getCommunities() {
         try {
-            List<Community> c =  communityRepository.findAll();
+            Iterable<Community> c =  communityRepository.findAll();
             List<CommunityDTO.Get> result = new ArrayList<>();
             for(Community comm : c) {
                 CommunityDTO.Get cDTO = new CommunityDTO.Get(comm.getId(), comm.getName(), comm.getDescription(), comm.getCreationDate(), comm.isSuspended(), comm.getSuspendedReason());

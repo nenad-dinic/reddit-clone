@@ -2,21 +2,32 @@ package com.example.redditclone.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+//@Entity
 @Getter
 @Setter
-@Table(name="post")
+//@Table(name="post")
+@Document(indexName = "post")
 public class Post {
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    @Id
+    private Long id;
+    @Field(type = FieldType.Text)
     private String title;
+    @Field(type = FieldType.Text)
     private String text;
+    @Field(type = FieldType.Date)
     private LocalDate creationDate;
+    @Field(type = FieldType.Text)
     private String imagePath;
+    @Field(type = FieldType.Integer)
     private Long postedBy;
+    @Field(type = FieldType.Integer)
     private Long communityId;
 
     public Post() {

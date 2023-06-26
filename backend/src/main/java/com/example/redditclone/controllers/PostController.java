@@ -1,12 +1,12 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.PostDTO;
+import com.example.redditclone.repository.CommunityRepository;
+import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.enums.ReactionTo;
 import com.example.redditclone.enums.ReactionType;
 import com.example.redditclone.model.Post;
 import com.example.redditclone.model.Reaction;
-import com.example.redditclone.repository.CommunityRepository;
-import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.repository.ReactionRepository;
 import com.example.redditclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class PostController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     PostDTO.Get deletePost(@RequestParam("id") String id) {
         try {
-            Post p =postRepository.findById(Long.parseLong(id)).get();
+            Post p = postRepository.findById(Long.parseLong(id)).get();
             postRepository.delete(p);
             PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));

@@ -1,16 +1,16 @@
 package com.example.redditclone.repository;
 
-import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Post;
-import com.example.redditclone.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.elasticsearch.annotations.Query;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+@Repository
+public interface PostRepository extends ElasticsearchRepository<Post, Long> {
     List<Post> findByOrderByCreationDateDesc();
 
-    @Query(value = "SELECT p.* from post p inner join Community on p.community_id = Community.id where Community.name = :name order by creation_date desc", nativeQuery = true)
+    @Query(value = "SELECT p.* from post p inner join Community on p.community_id = Community.id where Community.name = :name order by creation_date desc")
     List<Post> findAllForCommunity(String name);
 }

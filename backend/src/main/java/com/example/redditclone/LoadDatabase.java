@@ -17,15 +17,6 @@ public class LoadDatabase {
         return args -> {log.info("initialized users");};
     }
 
-    @Bean
-    CommandLineRunner initPost(PostRepository repository) {
-        return args -> {log.info("initialized post");};
-    }
-
-    @Bean
-    CommandLineRunner initCommunity(CommunityRepository repository) {
-        return args -> {log.info("initialized community");};
-    }
 
     @Bean
     CommandLineRunner initModerator(ModeratorRepository repository) {
