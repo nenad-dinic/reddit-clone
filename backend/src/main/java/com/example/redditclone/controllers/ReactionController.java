@@ -24,7 +24,7 @@ public class ReactionController {
         Reaction r = reactionRepository.findOneReaction(
                 data.getReactionBy(),
                 data.getReactionTo() == ReactionTo.POST ? data.getReactionToId() : null,
-                data.getReactionTo() == ReactionTo.COMMENT ? data.getReactionToId() : null
+                data.getReactionTo() == ReactionTo.COMMENT ? Long.valueOf(data.getReactionToId()) : null
         );
         if(r == null){
             try {

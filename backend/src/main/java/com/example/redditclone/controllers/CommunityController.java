@@ -48,7 +48,7 @@ public class CommunityController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     CommunityDTO.Get deleteCommunity(@RequestParam("id") String id) {
         try {
-            Community c = communityRepository.findById(Long.parseLong(id)).get();
+            Community c = communityRepository.findById(id).get();
             communityRepository.delete(c);
             CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
             result.setModerators(getCommunityModerators(result.getId()));
@@ -63,7 +63,7 @@ public class CommunityController {
     produces = MediaType.APPLICATION_JSON_VALUE)
     CommunityDTO.Get updateCommunity(@RequestParam("id") String id, @RequestBody CommunityDTO.Update data) {
         try {
-            Community c = communityRepository.findById(Long.parseLong(id)).get();
+            Community c = communityRepository.findById(id).get();
             c.setName(data.getName());
             c.setDescription(data.getDescription());
             communityRepository.save(c);

@@ -14,11 +14,11 @@ export class PostService {
         return this.http.get<ApiPost[]>(environment.APIUrl + "posts");
     }
 
-    getAllForCommunity(name: string) {
-        return this.http.get<ApiPost[]>(environment.APIUrl + "posts/community?name=" + name);
+    getAllForCommunity(communityId: string) {
+        return this.http.get<ApiPost[]>(environment.APIUrl + "posts/community?communityId=" + communityId);
     }
 
-    createPost(title: string|null|undefined, description: string|null|undefined, userId: number, communityId: number) {
+    createPost(title: string|null|undefined, description: string|null|undefined, userId: number, communityId: string) {
         return this.http.post<ApiPost>(environment.APIUrl + "post", {
             title: title,
             text: description,

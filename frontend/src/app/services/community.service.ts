@@ -25,7 +25,7 @@ export class CommunityService {
         });
     }
 
-    updateCommunity(communityId: number, name: string|null|undefined, description: string|null|undefined) {
+    updateCommunity(communityId: string, name: string|null|undefined, description: string|null|undefined) {
         return this.http.put<ApiCommunity>(environment.APIUrl + "community?id=" + communityId, {
             name: name,
             description: description,
@@ -36,7 +36,7 @@ export class CommunityService {
         })
     }
 
-    deleteCommunity(communityId: number) {
+    deleteCommunity(communityId: string) {
         return this.http.delete<ApiCommunity>(environment.APIUrl + "community?id=" + communityId,
         {
             headers: {Authorization: "Bearer " + localStorage.getItem("token")}

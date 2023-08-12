@@ -35,7 +35,6 @@ export class CommunityPageComponent implements OnInit {
       if (this.communityName != undefined) {
         this.communityName = this.communityName[0].toUpperCase() + this.communityName.substring(1).toLowerCase();
         this.loadCommunity();
-        this.loadPosts();
       } else {
         this.router.navigateByUrl("/home");
       }
@@ -43,7 +42,7 @@ export class CommunityPageComponent implements OnInit {
   }
 
   loadPosts() {
-    this.postService.getAllForCommunity(this.communityName).subscribe(response => {
+    this.postService.getAllForCommunity(this.communityData.id).subscribe(response => {
       if (response != null) {
         this.posts = response;
       } else {
@@ -58,6 +57,7 @@ export class CommunityPageComponent implements OnInit {
         this.router.navigateByUrl("/home");
       } else {
         this.communityData = response;
+        this.loadPosts();
       }
     })
   }

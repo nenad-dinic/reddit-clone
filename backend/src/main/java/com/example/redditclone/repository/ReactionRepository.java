@@ -10,15 +10,15 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
             "((:reactionToPost is not null and reaction_to_post_id = :reactionToPost) or " +
             "(:reactionToComment is not null and reaction_to_comment_id = :reactionToComment))",
             nativeQuery = true)
-    Reaction findOneReaction(Long reactionBy, Long reactionToPost, Long reactionToComment);
+    Reaction findOneReaction(Long reactionBy, String reactionToPost, Long reactionToComment);
 
     @Query(value = "SELECT " +
             "(SELECT COUNT(*) FROM reaction WHERE reaction_to_post_id = :postId AND TYPE = 0) - " +
             "(SELECT COUNT(*) FROM reaction WHERE reaction_to_post_id = :postId AND TYPE = 1) AS value " +
             "FROM reaction LIMIT 1;", nativeQuery = true)
-    Long getKarmaForPost(Long postId);
+    Long getKarmaForPost(String postId);
 
-    @Query(value = "SELECT (" +
+    /*@Query(value = "SELECT (" +
             "SELECT COUNT(*) FROM user u " +
             "INNER JOIN post p ON u.id = p.posted_by " +
             "INNER JOIN reaction r ON p.id = r.reaction_to_post_id " +
@@ -27,6 +27,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
             "INNER JOIN post p ON u.id = p.posted_by " +
             "INNER JOIN reaction r ON p.id = r.reaction_to_post_id " +
             "WHERE u.id = :id AND r.type = 1) " +
-            "FROM user u WHERE u.id = :id ; ", nativeQuery = true)
+            "FROM user u WHERE u.id = :id ; ", nativeQuery = true)*/
+    @Query(value = "SELECT 0", nativeQuery = true)
     Long getKarmaForUser(Long id);
 }

@@ -18,14 +18,14 @@ public class Reaction {
     private LocalDate timestamp;
     private Long reactionBy;
     private ReactionTo reactionTo;
-    private Long reactionToPostId;
+    private String reactionToPostId;
     private Long reactionToCommentId;
 
     public Reaction() {
 
     }
 
-    public Reaction(ReactionType type, LocalDate timestamp, Long reactionBy, ReactionTo reactionTo, Long reactionToId) {
+    public Reaction(ReactionType type, LocalDate timestamp, Long reactionBy, ReactionTo reactionTo, String reactionToId) {
         this.type = type;
         this.timestamp = timestamp;
         this.reactionBy = reactionBy;
@@ -33,7 +33,7 @@ public class Reaction {
         if (reactionTo == ReactionTo.POST) {
             this.reactionToPostId = reactionToId;
         } else {
-            this.reactionToCommentId = reactionToId;
+            this.reactionToCommentId = Long.valueOf(reactionToId);
         }
     }
 

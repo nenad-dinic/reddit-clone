@@ -13,7 +13,7 @@ public class PostDTO {
     @Setter
     public static class Add {
         private Long userId;
-        private Long communityId;
+        private String communityId;
         private String title;
         private String text;
         private String imagePath;
@@ -29,18 +29,18 @@ public class PostDTO {
     @Getter
     @Setter
     public static class Get {
-        private Long id;
+        private String id;
         private String title;
         private String text;
         private LocalDate creationDate;
         private String imagePath;
         private Long postedBy;
-        private Long communityId;
+        private String communityId;
         private Long karma;
         private User user;
         private Community community;
 
-        public Get(Long id, String title, String text, LocalDate creationDate, String imagePath, Long postedBy, Long communityId, Long karma, User user, Community community) {
+        public Get(String id, String title, String text, LocalDate creationDate, String imagePath, Long postedBy, String communityId, Long karma, User user, Community community) {
             this.id = id;
             this.title = title;
             this.text = text;

@@ -16,7 +16,8 @@ import java.time.LocalDate;
 @Document(indexName = "post")
 public class Post {
     @Id
-    private Long id;
+    @Field(type = FieldType.Text)
+    private String id;
     @Field(type = FieldType.Text)
     private String title;
     @Field(type = FieldType.Text)
@@ -27,14 +28,14 @@ public class Post {
     private String imagePath;
     @Field(type = FieldType.Integer)
     private Long postedBy;
-    @Field(type = FieldType.Integer)
-    private Long communityId;
+    @Field(type = FieldType.Text)
+    private String communityId;
 
     public Post() {
 
     }
 
-    public Post(String title, String text, LocalDate creationDate, String imagePath, Long postedBy, Long communityId) {
+    public Post(String title, String text, LocalDate creationDate, String imagePath, Long postedBy, String communityId) {
         this.title = title;
         this.text = text;
         this.creationDate = creationDate;

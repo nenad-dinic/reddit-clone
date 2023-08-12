@@ -42,6 +42,7 @@ public class PostController {
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
             return result;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -107,9 +108,9 @@ public class PostController {
 
     @GetMapping(value = "/posts/community",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    List<PostDTO.Get> getCommunityPosts(@RequestParam("name") String name) {
+    List<PostDTO.Get> getCommunityPosts(@RequestParam("communityId") String communityId) {
         try {
-            List<Post> posts = postRepository.findAllForCommunity(name);
+            List<Post> posts = postRepository.findAllByCommunityId(communityId);
             List<PostDTO.Get> result = new ArrayList<>();
             for(Post p : posts) {
                 result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get()));

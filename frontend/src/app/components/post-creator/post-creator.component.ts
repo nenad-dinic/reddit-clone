@@ -19,7 +19,7 @@ export class PostCreatorComponent implements OnInit {
   )
 
   @Input()
-  communityId!: number;
+  communityId!: string;
 
   @Output()
   onPostCreation = new EventEmitter();

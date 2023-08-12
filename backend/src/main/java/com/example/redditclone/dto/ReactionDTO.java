@@ -15,6 +15,6 @@ public class ReactionDTO {
         private ReactionType reactionType;
         private Long reactionBy;
         private ReactionTo reactionTo;
-        private Long reactionToId;
+        private String reactionToId;
     }
 }

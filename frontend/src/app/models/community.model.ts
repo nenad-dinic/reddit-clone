@@ -1,5 +1,5 @@
 export interface ApiCommunity {
-    id: number;
+    id: string;
     name: string;
     description: string;
     creationDate: Date;
