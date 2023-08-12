@@ -17,4 +17,6 @@ public interface PostRepository extends ElasticsearchRepository<Post, Long> {
 
     //@Query("{\"bool\": {\"must\": [{\"term\": {\"community.name\": \"?0\"}}]}}")
     List<Post> findAllByCommunityId(@Param("communityId") String id);
+
+    List<Post> findAllByPostedBy(@Param("postedBy") Long postedBy);
 }

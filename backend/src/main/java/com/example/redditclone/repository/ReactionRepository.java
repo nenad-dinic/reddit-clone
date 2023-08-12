@@ -4,6 +4,8 @@ import com.example.redditclone.model.Reaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     @Query(value = "select * from reaction " +
             "where reaction_by = :reactionBy and " +
@@ -28,6 +30,15 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
             "INNER JOIN reaction r ON p.id = r.reaction_to_post_id " +
             "WHERE u.id = :id AND r.type = 1) " +
             "FROM user u WHERE u.id = :id ; ", nativeQuery = true)*/
-    @Query(value = "SELECT 0", nativeQuery = true)
-    Long getKarmaForUser(Long id);
+    //Long getKarmaForUser(Long id);
+
+    @Query(value = "SELECT (SELECT COUNT(*) " +
+            "FROM reaction " +
+            "WHERE reaction.reaction_to_post_id IN :postIds " +
+            "AND reaction.type = 0) - " +
+            "(SELECT COUNT(*) " +
+            "FROM reaction " +
+            "WHERE reaction.reaction_to_post_id IN :postIds " +
+            "AND reaction.type = 1);", nativeQuery = true)
+    Long getKarmaForUser(List<String> postIds);
 }

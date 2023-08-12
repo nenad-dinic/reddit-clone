@@ -5,8 +5,10 @@ import com.example.redditclone.dto.PostDTO;
 import com.example.redditclone.dto.UserDTO;
 import com.example.redditclone.misc.HashPassword;
 import com.example.redditclone.model.Admin;
+import com.example.redditclone.model.Post;
 import com.example.redditclone.model.User;
 import com.example.redditclone.repository.AdminRepository;
+import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.repository.ReactionRepository;
 import com.example.redditclone.repository.UserRepository;
 import com.example.redditclone.security.TokenUtils;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -29,11 +33,23 @@ public class UserController {
     @Autowired
     ReactionRepository reactionRepository;
 
+    @Autowired
+    PostRepository postRepository;
+
+    Long getUserKarma(Long userId) {
+        List<Post> posts = postRepository.findAllByPostedBy(userId);
+        List<String> postIds = new ArrayList<>();
+        for (Post p : posts) {
+            postIds.add(p.getId());
+        }
+        return reactionRepository.getKarmaForUser(postIds);
+    }
+
     @GetMapping(value = "/user",
     produces = MediaType.APPLICATION_JSON_VALUE)
     UserDTO.Get getUser(@RequestParam("id") String id) {
         User u = userRepository.findById(Long.parseLong(id)).get();
-        UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+        UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), getUserKarma(u.getId()));
         return result;
     }
 
@@ -44,7 +60,7 @@ public class UserController {
         try {
             String hashPassword = HashPassword.createHash(data.getPassword());
             User u = userRepository.save(new User (data.getUsername(), hashPassword, data.getEmail(), data.getAvatar(), LocalDate.now(), data.getDescription(), data.getDisplayName()));
-            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), getUserKarma(u.getId()));
             return result;
 
         } catch (Exception e) {
@@ -82,7 +98,7 @@ public class UserController {
             User u = userRepository.findOneByUsernameAndPassword(data.getUsername(), hashPassword);
             u.setPassword(newHashPassword);
             userRepository.save(u);
-            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), getUserKarma(u.getId()));
             return result;
         } catch (Exception e) {
             return null;
@@ -97,7 +113,7 @@ public class UserController {
         String username = TokenUtils.getUsernameFromToken(data.token);
         try {
             User u = userRepository.findOneByUsername(username);
-            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), getUserKarma(u.getId()));
             return result;
         } catch (Exception e) {
             return null;
@@ -114,7 +130,7 @@ public class UserController {
             u.setEmail(data.getEmail());
             u.setDescription(data.getDescription());
             userRepository.save(u);
-            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), reactionRepository.getKarmaForUser(u.getId()));
+            UserDTO.Get result = new UserDTO.Get(u.getId(), u.getUsername(), u.getEmail(), u.getAvatar(), u.getDescription(), u.getDisplayName(), u.getRegistrationDate(), getUserKarma(u.getId()));
             return result;
         } catch (Exception e) {
             return null;
