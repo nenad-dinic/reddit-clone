@@ -12,9 +12,9 @@ import javax.persistence.*;
 public class Moderator {
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private Long userId;
-    private Long communityId;
+    private String communityId;
 
-    public Moderator(Long userId, Long communityId) {
+    public Moderator(Long userId, String communityId) {
         this.userId = userId;
         this.communityId = communityId;
     }

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ModeratorRepository extends JpaRepository<Moderator, Long> {
-    List<Moderator> findAllByCommunityId(Long communityId);
+    List<Moderator> findAllByCommunityId(String communityId);
 }

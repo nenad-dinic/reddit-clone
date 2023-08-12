@@ -16,7 +16,8 @@ import java.time.LocalDate;
 @Document(indexName = "community")
 public class Community {
     @Id
-    private Long id;
+    @Field(type = FieldType.Text)
+    private String id;
     @Field(type = FieldType.Text)
     private String name;
     @Field(type = FieldType.Text)

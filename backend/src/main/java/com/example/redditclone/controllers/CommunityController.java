@@ -82,8 +82,10 @@ public class CommunityController {
             Community c = communityRepository.findByName(name);
             CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
             result.setModerators(getCommunityModerators(result.getId()));
+            System.out.println(result);
             return result;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -106,7 +108,7 @@ public class CommunityController {
         }
     }
 
-    List<Long> getCommunityModerators(Long communityId) {
+    List<Long> getCommunityModerators(String communityId) {
         List<Moderator> moderators =  moderatorRepository.findAllByCommunityId(communityId);
         List<Long> moderatorIds = new ArrayList<>();
         for (Moderator m : moderators) {

@@ -25,7 +25,7 @@ public class CommunityDTO {
     @Getter
     @Setter
     public static class Get {
-        private Long id;
+        private String id;
         private String name;
         private String description;
         private LocalDate creationDate;
@@ -34,7 +34,7 @@ public class CommunityDTO {
 
         private List<Long> moderators;
 
-        public Get(Long id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason) {
+        public Get(String id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason) {
             this.id = id;
             this.name = name;
             this.description = description;
