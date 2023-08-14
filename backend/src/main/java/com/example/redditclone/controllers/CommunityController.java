@@ -1,6 +1,7 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.CommunityDTO;
+import com.example.redditclone.misc.FileHandler;
 import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.model.Community;
@@ -26,20 +27,24 @@ public class CommunityController {
     PostRepository postRepository;
 
     @PostMapping(value = "/community",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    CommunityDTO.Get createCommunity(@RequestBody CommunityDTO.Add data) {
+    CommunityDTO.Get createCommunity(@ModelAttribute CommunityDTO.Add data) {
         try {
-            Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, ""));
+            String filePath = FileHandler.saveFile(data.getDescPdf());
+            System.out.println(filePath);
+            Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, "", filePath));
             try {
                 moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
             } catch (Exception e) {
+                e.printStackTrace();
                 communityRepository.delete(c);
             }
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -50,7 +55,7 @@ public class CommunityController {
         try {
             Community c = communityRepository.findById(id).get();
             communityRepository.delete(c);
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
         } catch (Exception e) {
@@ -67,7 +72,7 @@ public class CommunityController {
             c.setName(data.getName());
             c.setDescription(data.getDescription());
             communityRepository.save(c);
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
         } catch (Exception e) {
@@ -80,7 +85,7 @@ public class CommunityController {
     CommunityDTO.Get getCommunity(@RequestParam("name") String name) {
         try {
             Community c = communityRepository.findByName(name);
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
             result.setModerators(getCommunityModerators(result.getId()));
             System.out.println(result);
             return result;
@@ -97,10 +102,9 @@ public class CommunityController {
             Iterable<Community> c =  communityRepository.findAll();
             List<CommunityDTO.Get> result = new ArrayList<>();
             for(Community comm : c) {
-                CommunityDTO.Get cDTO = new CommunityDTO.Get(comm.getId(), comm.getName(), comm.getDescription(), comm.getCreationDate(), comm.isSuspended(), comm.getSuspendedReason());
+                CommunityDTO.Get cDTO = new CommunityDTO.Get(comm.getId(), comm.getName(), comm.getDescription(), comm.getCreationDate(), comm.isSuspended(), comm.getSuspendedReason(), comm.getFilePath());
                 cDTO.setModerators(getCommunityModerators(cDTO.getId()));
                 result.add(cDTO);
-
             }
             return result;
         } catch (Exception e) {

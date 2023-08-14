@@ -2,6 +2,7 @@ package com.example.redditclone.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +14,7 @@ public class CommunityDTO {
         private Long userId;
         private String name;
         private String description;
+        private MultipartFile descPdf;
     }
 
     @Getter
@@ -31,16 +33,17 @@ public class CommunityDTO {
         private LocalDate creationDate;
         private boolean isSuspended;
         private String suspendedReason;
-
+        private String filePath;
         private List<Long> moderators;
 
-        public Get(String id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason) {
+        public Get(String id, String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String filePath) {
             this.id = id;
             this.name = name;
             this.description = description;
             this.creationDate = creationDate;
             this.isSuspended = isSuspended;
             this.suspendedReason = suspendedReason;
+            this.filePath = filePath;
 
         }
     }

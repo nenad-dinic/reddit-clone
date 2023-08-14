@@ -42,12 +42,14 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         if(authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         } else {
+            response.setStatus(401);
             return;
         }
 
         username = TokenUtils.getUsernameFromToken(token);
 
         if(username == null) {
+            response.setStatus(401);
             return;
         }
 
