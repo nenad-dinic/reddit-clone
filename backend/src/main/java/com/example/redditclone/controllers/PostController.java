@@ -1,6 +1,7 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.PostDTO;
+import com.example.redditclone.misc.FileHandler;
 import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.enums.ReactionTo;
@@ -32,13 +33,14 @@ public class PostController {
     CommunityRepository communityRepository;
 
     @PostMapping(value = "/post",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
-    PostDTO.Get createPost(@RequestBody PostDTO.Add data) {
+    PostDTO.Get createPost(@ModelAttribute PostDTO.Add data) {
         try {
-            Post p = postRepository.save(new Post(data.getTitle(), data.getText(), LocalDate.now(), "", data.getUserId(), data.getCommunityId()));
+            String filePath = FileHandler.saveFile(data.getFilePdf());
+            Post p = postRepository.save(new Post(data.getTitle(), data.getText(), LocalDate.now(), "", data.getUserId(), data.getCommunityId(), filePath));
             reactionRepository.save(new Reaction(ReactionType.UPVOTE, LocalDate.now(), data.getUserId(), ReactionTo.POST, p.getId()));
-            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath());
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
             return result;
         } catch (Exception e) {
@@ -56,7 +58,7 @@ public class PostController {
             p.setTitle(data.getTitle());
             p.setText(data.getText());
             postRepository.save(p);
-            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath());
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
             return result;
         } catch (Exception e) {
@@ -70,7 +72,7 @@ public class PostController {
         try {
             Post p = postRepository.findById(Long.parseLong(id)).get();
             postRepository.delete(p);
-            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath());
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
             return result;
         } catch (Exception e) {
@@ -83,7 +85,7 @@ public class PostController {
     PostDTO.Get getPost(@RequestParam("id") String id) {
         try {
             Post p = postRepository.findById(Long.parseLong(id)).get();
-            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get());
+            PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath());
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
             return result;
         } catch (Exception e) {
@@ -98,7 +100,7 @@ public class PostController {
             List<Post> posts = postRepository.findByOrderByCreationDateDesc();
             List<PostDTO.Get> result = new ArrayList<>();
             for(Post p : posts) {
-                result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get()));
+                result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath()));
             }
             return result;
         } catch (Exception e) {
@@ -113,7 +115,7 @@ public class PostController {
             List<Post> posts = postRepository.findAllByCommunityId(communityId);
             List<PostDTO.Get> result = new ArrayList<>();
             for(Post p : posts) {
-                result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get()));
+                result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath()));
             }
             return result;
         } catch (Exception e) {

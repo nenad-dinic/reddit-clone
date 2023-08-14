@@ -4,6 +4,7 @@ import com.example.redditclone.model.Community;
 import com.example.redditclone.model.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -17,6 +18,7 @@ public class PostDTO {
         private String title;
         private String text;
         private String imagePath;
+        private MultipartFile filePdf;
     }
 
     @Getter
@@ -39,8 +41,9 @@ public class PostDTO {
         private Long karma;
         private User user;
         private Community community;
+        private String filePath;
 
-        public Get(String id, String title, String text, LocalDate creationDate, String imagePath, Long postedBy, String communityId, Long karma, User user, Community community) {
+        public Get(String id, String title, String text, LocalDate creationDate, String imagePath, Long postedBy, String communityId, Long karma, User user, Community community, String filePath) {
             this.id = id;
             this.title = title;
             this.text = text;
@@ -51,6 +54,7 @@ public class PostDTO {
             this.karma = karma;
             this.user = user;
             this.community = community;
+            this.filePath = filePath;
         }
     }
 }

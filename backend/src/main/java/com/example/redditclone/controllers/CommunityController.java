@@ -32,7 +32,6 @@ public class CommunityController {
     CommunityDTO.Get createCommunity(@ModelAttribute CommunityDTO.Add data) {
         try {
             String filePath = FileHandler.saveFile(data.getDescPdf());
-            System.out.println(filePath);
             Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, "", filePath));
             try {
                 moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
