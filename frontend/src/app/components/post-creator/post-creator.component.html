@@ -10,6 +10,7 @@
                 <textarea matInput placeholder="Description" formControlName="description"></textarea>
                 <mat-error>Description is required.</mat-error>
             </mat-form-field>
+                <input type="file" placeholder="pdf" formControlName="filePdf" accept="application/pdf" (change)="setFile($event)">
             <button type="submit" mat-flat-button color="primary">Create</button>
         </form>
     </mat-expansion-panel>

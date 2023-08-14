@@ -17,8 +17,12 @@ export class CommunityDialogComponent implements OnInit {
 
   communityGroup = new FormGroup( {
     name: new FormControl("", [Validators.required, Validators.maxLength(100)]),
-    description: new FormControl("", [Validators.required])
+    description: new FormControl("", [Validators.required]),
+    descPdf: new FormControl("", [Validators.required])
   })
+
+  file!: File;
+
 
   constructor(private communityService: CommunityService,
     private userService: UserService,
@@ -31,7 +35,8 @@ export class CommunityDialogComponent implements OnInit {
     if(this.data != undefined) {
       this.communityGroup.setValue({
         name: this.data.name,
-        description: this.data.description
+        description: this.data.description,
+        descPdf: null
       })
     }
   }
@@ -52,7 +57,7 @@ export class CommunityDialogComponent implements OnInit {
       })
     } else {
       let userId = this.userService.loggedInUser != undefined ? this.userService.loggedInUser.id : -1;
-      this.communityService.createCommunity(userId, this.communityGroup.value.name, this.communityGroup.value.description).subscribe(response => {
+      this.communityService.createCommunity(userId, this.communityGroup.value.name, this.communityGroup.value.description, this.file).subscribe(response => {
         if(response == undefined) {
           this.snackBar.open("Failed to create community", "Ok")
         } else {
@@ -62,6 +67,10 @@ export class CommunityDialogComponent implements OnInit {
         }
       })
     }
+  }
+
+  setFile(event: any) {
+    this.file = event.target.files[0];
   }
 
 }

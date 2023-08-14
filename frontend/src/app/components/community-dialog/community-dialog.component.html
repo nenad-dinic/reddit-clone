@@ -10,5 +10,8 @@
         <mat-error>Description is required.</mat-error>
     </mat-form-field>
 
+    
+        <input type="file" placeholder="pdf" formControlName="descPdf" accept="application/pdf" (change)="setFile($event)">
+
     <button mat-button type="submit">Submit</button>
 </form>

@@ -18,14 +18,14 @@ export class PostService {
         return this.http.get<ApiPost[]>(environment.APIUrl + "posts/community?communityId=" + communityId);
     }
 
-    createPost(title: string|null|undefined, description: string|null|undefined, userId: number, communityId: string) {
-        return this.http.post<ApiPost>(environment.APIUrl + "post", {
-            title: title,
-            text: description,
-            userId: userId,
-            communityId: communityId
-        }
-        ,
+    createPost(title: string|null|undefined, description: string|null|undefined, userId: number, communityId: string, file: File|null|undefined) {
+        const data = new FormData();
+        if (title != null) data.append("title", title);
+        if (description != null) data.append("text", description);
+        if (file != null) data.append("filePdf", file);
+        if (userId != null) data.append("userId", userId.toString());
+        if (communityId != null) data.append("communityId", communityId);
+        return this.http.post<ApiPost>(environment.APIUrl + "post", data,
         {
             headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         })
@@ -38,7 +38,8 @@ export class PostService {
         });
     }
 
-    updatePost(id: number, title: string|null|undefined, description: string|null|undefined) {
+    updatePost(id: number, title: string|null|undefined, description: string|null|undefined,) {
+        
         return this.http.put<ApiPost>(environment.APIUrl + "post?id=" + id, {
             title: title,
             text: description

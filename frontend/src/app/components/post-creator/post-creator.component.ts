@@ -14,9 +14,11 @@ export class PostCreatorComponent implements OnInit {
   postGroup = new FormGroup(
     {
       title: new FormControl("", [Validators.required, Validators.maxLength(100)]),
-      description: new FormControl("", [Validators.required])
+      description: new FormControl("", [Validators.required]),
+      filePdf: new FormControl("", [Validators.required])
     }
   )
+  file!: File;
 
   @Input()
   communityId!: string;
@@ -37,7 +39,7 @@ export class PostCreatorComponent implements OnInit {
     } else {
       let data = this.postGroup.value;
       let userId = this.userService.loggedInUser != undefined ? this.userService.loggedInUser.id : -1
-      this.postService.createPost(data.title, data.description, userId, this.communityId).subscribe(response => {
+      this.postService.createPost(data.title, data.description, userId, this.communityId, this.file).subscribe(response => {
         if (response == undefined) {
           this.snackBar.open("Failed to create post", "OK")
         } else {
@@ -47,5 +49,9 @@ export class PostCreatorComponent implements OnInit {
         }
       })
     }
+  }
+
+  setFile(event: any) {
+    this.file = event.target.files[0];
   }
 }

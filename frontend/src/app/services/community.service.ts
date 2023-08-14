@@ -13,13 +13,13 @@ export class CommunityService {
         return this.http.get<ApiCommunity>(environment.APIUrl + "community?name=" + name);
     }
 
-    createCommunity(userId:number, name: string|null|undefined, description: string|null|undefined) {
-        return this.http.post<ApiCommunity>(environment.APIUrl + "community", {
-            name: name,
-            description: description,
-            userId: userId
-        }
-        ,
+    createCommunity(userId:number, name: string|null|undefined, description: string|null|undefined, file: File|null|undefined) {
+        const data = new FormData();
+        if (name != null) data.append("name", name);
+        if (description != null) data.append("description", description);
+        if (userId != null) data.append("userId", userId.toString());
+        if (file != null) data.append("descPdf", file);
+        return this.http.post<ApiCommunity>(environment.APIUrl + "community", data,
         {
             headers: {Authorization: "Bearer " + localStorage.getItem("token")}
         });
