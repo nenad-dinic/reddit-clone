@@ -7,7 +7,15 @@ import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Moderator;
 import com.example.redditclone.repository.ModeratorRepository;
+import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +33,9 @@ public class CommunityController {
 
     @Autowired
     PostRepository postRepository;
+
+    @Autowired
+    ElasticsearchOperations elasticsearchOperations;
 
     @PostMapping(value = "/community",
     consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -94,7 +105,7 @@ public class CommunityController {
         }
     }
 
-    @GetMapping(value = "/communities",
+    /*@GetMapping(value = "/communities",
     produces = MediaType.APPLICATION_JSON_VALUE)
     List<CommunityDTO.Get> getCommunities() {
         try {
@@ -109,7 +120,7 @@ public class CommunityController {
         } catch (Exception e) {
             return null;
         }
-    }
+    }*/
 
     List<Long> getCommunityModerators(String communityId) {
         List<Moderator> moderators =  moderatorRepository.findAllByCommunityId(communityId);
@@ -118,5 +129,24 @@ public class CommunityController {
             moderatorIds.add(m.getUserId());
         }
         return moderatorIds;
+    }
+
+    @GetMapping(value = "/communities",
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    List<CommunityDTO.Get> getCommunitiesForSearch(@RequestParam("search") String search) {
+        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(search, "name", "description").fuzziness(Fuzziness.AUTO);
+        Query query = new NativeSearchQueryBuilder().withFilter(queryBuilder).build();
+        SearchHits<Community> communityHits = elasticsearchOperations.search(query, Community.class, IndexCoordinates.of("community"));
+        List<Community> communities = new ArrayList<>();
+        communityHits.forEach(hit -> {
+            communities.add(hit.getContent());
+        });
+        List<CommunityDTO.Get> result = new ArrayList<>();
+        for(Community comm : communities) {
+            CommunityDTO.Get cDTO = new CommunityDTO.Get(comm.getId(), comm.getName(), comm.getDescription(), comm.getCreationDate(), comm.isSuspended(), comm.getSuspendedReason(), comm.getFilePath());
+            cDTO.setModerators(getCommunityModerators(cDTO.getId()));
+            result.add(cDTO);
+        }
+        return result;
     }
 }

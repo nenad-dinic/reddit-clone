@@ -7,6 +7,7 @@ import { CommunityDialogComponent } from '../community-dialog/community-dialog.c
 import { EditProfileDialogComponent } from '../edit-profile-dialog/edit-profile-dialog.component';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
+import { CommunityService } from 'src/app/services/community.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -17,7 +18,8 @@ export class NavBarComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
     private router: Router,
-    public userService: UserService) {}
+    public userService: UserService,
+    private communityService: CommunityService) {}
   
   ngOnInit(): void {
   }
@@ -46,8 +48,11 @@ export class NavBarComponent implements OnInit {
     if (input.value === "") {
       return;
     }
-    this.router.navigateByUrl("/community?name=" + input.value).then(()=>{
+    /* this.router.navigateByUrl("/community?name=" + input.value).then(()=>{
       window.location.reload();
+    }); */
+    this.communityService.getCommunities(input.value).subscribe(data => {
+        console.log(data);
     });
   }
 

@@ -13,6 +13,10 @@ export class CommunityService {
         return this.http.get<ApiCommunity>(environment.APIUrl + "community?name=" + name);
     }
 
+    getCommunities(search: string) {
+        return this.http.get<ApiCommunity[]>(environment.APIUrl + "communities?search=" + search);
+    }
+
     createCommunity(userId:number, name: string|null|undefined, description: string|null|undefined, file: File|null|undefined) {
         const data = new FormData();
         if (name != null) data.append("name", name);
