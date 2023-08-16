@@ -13,6 +13,9 @@
             </mat-menu>
         </h1>
         <p>{{communityData?.description}}</p>
+        <button id="downloadPdf" mat-button *ngIf="communityData.filePath != undefined" (click)="downloadPdf(communityData.filePath)">
+            Download description.
+        </button>
     </div>
 </div>
 <app-post-sorter></app-post-sorter>

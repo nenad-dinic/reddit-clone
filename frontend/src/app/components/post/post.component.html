@@ -11,6 +11,9 @@
         </mat-menu>
     </mat-card-title>
     <mat-card-content>{{data.text}}</mat-card-content>
+    <button mat-button *ngIf="data.filePath != undefined" (click)="downloadPdf(data.filePath)">
+        Download pdf.
+    </button>
     <mat-card-actions>
         <button mat-icon-button (click)="addReaction('UPVOTE')"><mat-icon>keyboard_arrow_up</mat-icon></button>
         <p class="counter">{{data.karma != undefined ? data.karma : 0}}</p>

@@ -37,3 +37,8 @@ h1 button {
 #delete {
     color: red;
 }
+
+#downloadPdf {
+    display: block;
+    margin: 0 auto;
+}

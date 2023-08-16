@@ -8,6 +8,7 @@ import { ApiPost } from 'src/app/models/post.model';
 import { CommunityService } from 'src/app/services/community.service';
 import { PostService } from 'src/app/services/post.service';
 import { UserService } from 'src/app/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-community-page',
@@ -78,5 +79,9 @@ export class CommunityPageComponent implements OnInit {
         this.snackBar.open("Failed to delete community", "Ok")
       }
     })
+  }
+
+  downloadPdf(path: string) {
+    window.open(environment.APIUrl + path.substring(1), "_blank");
   }
 }

@@ -11,6 +11,7 @@ export interface ApiPost {
         communityId: number,
         karma: number,
         user: ApiUser,
-        community: ApiCommunity
+        community: ApiCommunity,
+        filePath: string
 
 }

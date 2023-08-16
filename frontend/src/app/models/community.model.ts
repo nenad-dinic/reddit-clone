@@ -6,4 +6,5 @@ export interface ApiCommunity {
     suspendedReason: string;
     suspended: boolean;
     moderators: number[];
+    filePath: string;
 }

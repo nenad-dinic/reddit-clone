@@ -5,6 +5,7 @@ import { ApiPost } from 'src/app/models/post.model';
 import { PostService } from 'src/app/services/post.service';
 import { UserService } from 'src/app/services/user.service';
 import { EditPostDialogComponent } from '../edit-post-dialog/edit-post-dialog.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-post',
@@ -56,6 +57,10 @@ export class PostComponent implements OnInit {
         this.onPostChanged.emit();
       }
     })
+  }
+
+  downloadPdf(path: string){
+    window.open(environment.APIUrl + path.substring(1), "_blank");
   }
 
 }
