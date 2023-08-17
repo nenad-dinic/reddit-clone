@@ -1,11 +1,17 @@
 mat-toolbar {
-    height: 75px;
+    height: 80px;
     display: flex;
     background-color: rgb(165, 165, 165);
 }
 
 .fixed-input {
     width: 30%;
+}
+
+.fixed-select {
+    margin-top: -5px;
+    height: 100%;
+    width: 200px;
 }
 
 input {
@@ -16,7 +22,7 @@ input {
     flex-grow: 1;
 }
 
-::ng-deep .mat-form-field-wrapper {
+::ng-deep .fixed-input .mat-form-field-wrapper {
     background: white;
     border-radius: 5px;
 }

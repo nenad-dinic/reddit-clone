@@ -1,0 +1,14 @@
+<mat-card>
+    <mat-card-title>
+        <p><a [href]="'/community?name=' + data.name">{{data.name}}</a></p>
+    </mat-card-title>
+    <mat-card-content>
+        <p>{{data.description}}</p>
+        <p>Broj postova: {{data.postCount}}</p>
+        <p>Prosecna karma: {{data.averageKarma}}</p>
+
+    </mat-card-content>
+    <button mat-button *ngIf="data.filePath != undefined" (click)="downloadPdf(data.filePath)">
+        Download pdf.
+    </button>
+</mat-card>

@@ -7,4 +7,6 @@ export interface ApiCommunity {
     suspended: boolean;
     moderators: number[];
     filePath: string;
+    postCount: number;
+    averageKarma: number;
 }

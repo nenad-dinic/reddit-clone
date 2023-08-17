@@ -30,7 +30,10 @@ import { EditPostDialogComponent } from './components/edit-post-dialog/edit-post
 import { CommunityDialogComponent } from './components/community-dialog/community-dialog.component';
 import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';
 import { EditProfileDialogComponent } from './components/edit-profile-dialog/edit-profile-dialog.component';
-import { ProfilePageComponent } from './pages/profile-page/profile-page.component'; 
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { SearchPageComponent } from './pages/search-page/search-page.component';
+import { CommunityComponent } from './components/community/community.component';
+import {MatSelectModule} from '@angular/material/select'
 
 @NgModule({
   declarations: [
@@ -47,7 +50,9 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
     CommunityDialogComponent,
     ChangePasswordDialogComponent,
     EditProfileDialogComponent,
-    ProfilePageComponent
+    ProfilePageComponent,
+    SearchPageComponent,
+    CommunityComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +69,8 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
     AppRoutingModule,
     MatExpansionModule,
     MatSnackBarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
   ],
   providers: [UserService, PostService, CommunityService],
   bootstrap: [AppComponent]

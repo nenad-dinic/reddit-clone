@@ -2,11 +2,13 @@ package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.CommunityDTO;
 import com.example.redditclone.misc.FileHandler;
+import com.example.redditclone.model.Post;
 import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Moderator;
 import com.example.redditclone.repository.ModeratorRepository;
+import com.example.redditclone.repository.ReactionRepository;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -35,6 +37,9 @@ public class CommunityController {
     PostRepository postRepository;
 
     @Autowired
+    ReactionRepository reactionRepository;
+
+    @Autowired
     ElasticsearchOperations elasticsearchOperations;
 
     @PostMapping(value = "/community",
@@ -50,7 +55,9 @@ public class CommunityController {
                 e.printStackTrace();
                 communityRepository.delete(c);
             }
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
+            int postCount = getPostCount(c.getId());
+            int totalKarma = getTotalKarma(c.getId());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
         } catch (Exception e) {
@@ -65,7 +72,9 @@ public class CommunityController {
         try {
             Community c = communityRepository.findById(id).get();
             communityRepository.delete(c);
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
+            int postCount = getPostCount(c.getId());
+            int totalKarma = getTotalKarma(c.getId());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
         } catch (Exception e) {
@@ -82,7 +91,9 @@ public class CommunityController {
             c.setName(data.getName());
             c.setDescription(data.getDescription());
             communityRepository.save(c);
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
+            int postCount = getPostCount(c.getId());
+            int totalKarma = getTotalKarma(c.getId());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             result.setModerators(getCommunityModerators(result.getId()));
             return result;
         } catch (Exception e) {
@@ -95,7 +106,9 @@ public class CommunityController {
     CommunityDTO.Get getCommunity(@RequestParam("name") String name) {
         try {
             Community c = communityRepository.findByName(name);
-            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath());
+            int postCount = getPostCount(c.getId());
+            int totalKarma = getTotalKarma(c.getId());
+            CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             result.setModerators(getCommunityModerators(result.getId()));
             System.out.println(result);
             return result;
@@ -122,15 +135,6 @@ public class CommunityController {
         }
     }*/
 
-    List<Long> getCommunityModerators(String communityId) {
-        List<Moderator> moderators =  moderatorRepository.findAllByCommunityId(communityId);
-        List<Long> moderatorIds = new ArrayList<>();
-        for (Moderator m : moderators) {
-            moderatorIds.add(m.getUserId());
-        }
-        return moderatorIds;
-    }
-
     @GetMapping(value = "/communities",
     produces = MediaType.APPLICATION_JSON_VALUE)
     List<CommunityDTO.Get> getCommunitiesForSearch(@RequestParam("search") String search) {
@@ -142,11 +146,45 @@ public class CommunityController {
             communities.add(hit.getContent());
         });
         List<CommunityDTO.Get> result = new ArrayList<>();
-        for(Community comm : communities) {
-            CommunityDTO.Get cDTO = new CommunityDTO.Get(comm.getId(), comm.getName(), comm.getDescription(), comm.getCreationDate(), comm.isSuspended(), comm.getSuspendedReason(), comm.getFilePath());
+        for(Community c : communities) {
+            int postCount = getPostCount(c.getId());
+            int totalKarma = getTotalKarma(c.getId());
+            CommunityDTO.Get cDTO = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             cDTO.setModerators(getCommunityModerators(cDTO.getId()));
             result.add(cDTO);
         }
         return result;
     }
+
+    List<Long> getCommunityModerators(String communityId) {
+        List<Moderator> moderators =  moderatorRepository.findAllByCommunityId(communityId);
+        List<Long> moderatorIds = new ArrayList<>();
+        for (Moderator m : moderators) {
+            moderatorIds.add(m.getUserId());
+        }
+        return moderatorIds;
+    }
+
+    int getPostCount(String communityId) {
+        int count = postRepository.findAllByCommunityId(communityId).size();
+        return count;
+    }
+
+    int getTotalKarma(String communityId) {
+        int sum = 0;
+        List<Post> posts = postRepository.findAllByCommunityId(communityId);
+        for (Post p : posts) {
+            sum += reactionRepository.getKarmaForPost(p.getId());
+        }
+        return sum;
+    }
+
+    int calcKarma(int postCount, int totalKarma) {
+        if (postCount == 0) {
+            postCount = 1;
+        }
+        return totalKarma / postCount;
+    }
+
+
 }

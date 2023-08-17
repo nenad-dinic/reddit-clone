@@ -51,9 +51,10 @@ export class NavBarComponent implements OnInit {
     /* this.router.navigateByUrl("/community?name=" + input.value).then(()=>{
       window.location.reload();
     }); */
-    this.communityService.getCommunities(input.value).subscribe(data => {
+    this.router.navigateByUrl("/search?query=" + input.value);
+    /* this.communityService.getCommunities(input.value).subscribe(data => {
         console.log(data);
-    });
+    }); */
   }
 
   logOutUser() {

@@ -1,0 +1,21 @@
+mat-card {
+    width: 80%;
+    margin: 1rem auto;
+}
+
+mat-card-actions {
+    display: flex;
+}
+
+mat-card-title {
+    display: flex;
+}
+
+mat-card-title p {
+    margin: auto 0;
+}
+
+a {
+    text-decoration: underline;
+    color: black;
+}

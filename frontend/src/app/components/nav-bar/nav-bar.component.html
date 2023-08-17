@@ -5,6 +5,13 @@
     <mat-form-field class="fixed-input" appearance="outline">
         <input matInput #searchInput placeholder="Search" (keyup.enter)="search(searchInput)">
     </mat-form-field>
+    <mat-form-field class="fixed-select" appearance="outline">
+        <mat-label>Choose one</mat-label>
+        <mat-select >
+            <mat-option value="community">Zajednice</mat-option>
+            <mat-option value="post">Objave</mat-option>
+        </mat-select>
+    </mat-form-field>
     <span class="expand"></span>
     <div *ngIf="userService.loggedInUser == undefined">
         <button mat-button (click)="openLoginDialog()">Login</button>
