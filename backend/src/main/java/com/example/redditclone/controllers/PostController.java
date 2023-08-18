@@ -2,6 +2,7 @@ package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.PostDTO;
 import com.example.redditclone.misc.FileHandler;
+import com.example.redditclone.model.Community;
 import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.enums.ReactionTo;
@@ -10,7 +11,14 @@ import com.example.redditclone.model.Post;
 import com.example.redditclone.model.Reaction;
 import com.example.redditclone.repository.ReactionRepository;
 import com.example.redditclone.repository.UserRepository;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +39,9 @@ public class PostController {
 
     @Autowired
     CommunityRepository communityRepository;
+
+    @Autowired
+    ElasticsearchOperations elasticsearchOperations;
 
     @PostMapping(value = "/post",
     consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -121,5 +132,28 @@ public class PostController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @GetMapping(value = "/posts/search",
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    List<PostDTO.Get> getPostsForSearch(@RequestParam("search") String search) {
+        QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "title", "text");
+        QueryBuilder nameWildcardQuery = QueryBuilders.wildcardQuery("title", "*" + search + "*");
+        QueryBuilder descriptionWildcardQuery = QueryBuilders.wildcardQuery("text", "*" + search + "*");
+        QueryBuilder combinedQuery = QueryBuilders.boolQuery()
+                .should(multiMatchQuery)
+                .should(nameWildcardQuery)
+                .should(descriptionWildcardQuery);
+        Query query = new NativeSearchQueryBuilder().withFilter(combinedQuery).build();
+        SearchHits<Post> postHits = elasticsearchOperations.search(query, Post.class, IndexCoordinates.of("post"));
+        List<Post> posts = new ArrayList<>();
+        postHits.forEach(hit -> {
+            posts.add(hit.getContent());
+        });
+        List<PostDTO.Get> result = new ArrayList<>();
+        for (Post p : posts) {
+            result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath()));
+        }
+        return result;
     }
 }

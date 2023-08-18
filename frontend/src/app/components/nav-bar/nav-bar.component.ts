@@ -44,17 +44,11 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  search(input: HTMLInputElement) {
-    if (input.value === "") {
+  search(search: string, type: string) {
+    /* if (search === "") {
       return;
-    }
-    /* this.router.navigateByUrl("/community?name=" + input.value).then(()=>{
-      window.location.reload();
-    }); */
-    this.router.navigateByUrl("/search?query=" + input.value);
-    /* this.communityService.getCommunities(input.value).subscribe(data => {
-        console.log(data);
-    }); */
+    } */
+    this.router.navigateByUrl("/search?query=" + search + "&type=" + type);
   }
 
   logOutUser() {

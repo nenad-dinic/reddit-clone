@@ -63,4 +63,8 @@ export class PostService {
         });
     }
 
+    getPosts(search: string) {
+        return this.http.get<ApiPost[]>(environment.APIUrl + "posts/search?search=" + search);
+    }
+
 }

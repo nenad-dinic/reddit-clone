@@ -138,8 +138,14 @@ public class CommunityController {
     @GetMapping(value = "/communities",
     produces = MediaType.APPLICATION_JSON_VALUE)
     List<CommunityDTO.Get> getCommunitiesForSearch(@RequestParam("search") String search) {
-        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(search, "name", "description").fuzziness(Fuzziness.AUTO);
-        Query query = new NativeSearchQueryBuilder().withFilter(queryBuilder).build();
+        QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "name", "description");
+        QueryBuilder nameWildcardQuery = QueryBuilders.wildcardQuery("name", "*" + search + "*");
+        QueryBuilder descriptionWildcardQuery = QueryBuilders.wildcardQuery("description", "*" + search + "*");
+        QueryBuilder combinedQuery = QueryBuilders.boolQuery()
+                .should(multiMatchQuery)
+                .should(nameWildcardQuery)
+                .should(descriptionWildcardQuery);
+        Query query = new NativeSearchQueryBuilder().withFilter(combinedQuery).build();
         SearchHits<Community> communityHits = elasticsearchOperations.search(query, Community.class, IndexCoordinates.of("community"));
         List<Community> communities = new ArrayList<>();
         communityHits.forEach(hit -> {
