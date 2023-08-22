@@ -1,6 +1,7 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.CommunityDTO;
+import com.example.redditclone.misc.PdfHandler;
 import com.example.redditclone.misc.FileHandler;
 import com.example.redditclone.model.Post;
 import com.example.redditclone.repository.CommunityRepository;
@@ -9,7 +10,6 @@ import com.example.redditclone.model.Community;
 import com.example.redditclone.model.Moderator;
 import com.example.redditclone.repository.ModeratorRepository;
 import com.example.redditclone.repository.ReactionRepository;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +43,18 @@ public class CommunityController {
     @Autowired
     ElasticsearchOperations elasticsearchOperations;
 
+    @Autowired
+    PdfHandler pdfHandler;
+
     @PostMapping(value = "/community",
     consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
     CommunityDTO.Get createCommunity(@ModelAttribute CommunityDTO.Add data) {
         try {
             String filePath = FileHandler.saveFile(data.getDescPdf());
-            Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, "", filePath));
+            File file = new File("." + filePath);
+            String fileText = pdfHandler.getText(file);
+            Community c = communityRepository.save(new Community(data.getName(), data.getDescription(), LocalDate.now(), false, "", filePath, fileText));
             try {
                 moderatorRepository.save(new Moderator(data.getUserId(), c.getId()));
             } catch (Exception e) {
@@ -110,7 +116,6 @@ public class CommunityController {
             int totalKarma = getTotalKarma(c.getId());
             CommunityDTO.Get result = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             result.setModerators(getCommunityModerators(result.getId()));
-            System.out.println(result);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,13 +143,15 @@ public class CommunityController {
     @GetMapping(value = "/communities",
     produces = MediaType.APPLICATION_JSON_VALUE)
     List<CommunityDTO.Get> getCommunitiesForSearch(@RequestParam("search") String search) {
-        QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "name", "description");
+        QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "name", "description", "fileText");
         QueryBuilder nameWildcardQuery = QueryBuilders.wildcardQuery("name", "*" + search + "*");
         QueryBuilder descriptionWildcardQuery = QueryBuilders.wildcardQuery("description", "*" + search + "*");
+        QueryBuilder fileTextWildcardQuery = QueryBuilders.wildcardQuery("fileText", "*" + search + "*");
         QueryBuilder combinedQuery = QueryBuilders.boolQuery()
                 .should(multiMatchQuery)
                 .should(nameWildcardQuery)
-                .should(descriptionWildcardQuery);
+                .should(descriptionWildcardQuery)
+                .should(fileTextWildcardQuery);
         Query query = new NativeSearchQueryBuilder().withFilter(combinedQuery).build();
         SearchHits<Community> communityHits = elasticsearchOperations.search(query, Community.class, IndexCoordinates.of("community"));
         List<Community> communities = new ArrayList<>();

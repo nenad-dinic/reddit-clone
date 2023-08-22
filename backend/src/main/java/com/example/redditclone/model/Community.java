@@ -32,17 +32,20 @@ public class Community {
     private String suspendedReason;
     @Field(type = FieldType.Text)
     private String filePath;
+    @Field(type =  FieldType.Text)
+    private String fileText;
 
     public Community() {
 
     }
 
-    public Community(String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String filePath) {
+    public Community(String name, String description, LocalDate creationDate, boolean isSuspended, String suspendedReason, String filePath, String fileText) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.isSuspended = isSuspended;
         this.suspendedReason = suspendedReason;
         this.filePath = filePath;
+        this.fileText = fileText;
     }
 }

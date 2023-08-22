@@ -34,12 +34,14 @@ public class Post {
     private String communityId;
     @Field(type = FieldType.Text)
     private String filePath;
+    @Field(type =  FieldType.Text)
+    private String fileText;
 
     public Post() {
 
     }
 
-    public Post(String title, String text, LocalDate creationDate, String imagePath, Long postedBy, String communityId, String filePath) {
+    public Post(String title, String text, LocalDate creationDate, String imagePath, Long postedBy, String communityId, String filePath, String fileText) {
         this.title = title;
         this.text = text;
         this.creationDate = creationDate;
@@ -47,5 +49,6 @@ public class Post {
         this.postedBy = postedBy;
         this.communityId = communityId;
         this.filePath = filePath;
+        this.fileText = fileText;
     }
 }

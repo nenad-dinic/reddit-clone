@@ -1,8 +1,8 @@
 package com.example.redditclone.controllers;
 
 import com.example.redditclone.dto.PostDTO;
+import com.example.redditclone.misc.PdfHandler;
 import com.example.redditclone.misc.FileHandler;
-import com.example.redditclone.model.Community;
 import com.example.redditclone.repository.CommunityRepository;
 import com.example.redditclone.repository.PostRepository;
 import com.example.redditclone.enums.ReactionTo;
@@ -22,6 +22,7 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +44,18 @@ public class PostController {
     @Autowired
     ElasticsearchOperations elasticsearchOperations;
 
+    @Autowired
+    PdfHandler pdfHandler;
+
     @PostMapping(value = "/post",
     consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
     PostDTO.Get createPost(@ModelAttribute PostDTO.Add data) {
         try {
             String filePath = FileHandler.saveFile(data.getFilePdf());
-            Post p = postRepository.save(new Post(data.getTitle(), data.getText(), LocalDate.now(), "", data.getUserId(), data.getCommunityId(), filePath));
+            File file = new File("." + filePath);
+            String fileText = pdfHandler.getText(file);
+            Post p = postRepository.save(new Post(data.getTitle(), data.getText(), LocalDate.now(), "", data.getUserId(), data.getCommunityId(), filePath, fileText));
             reactionRepository.save(new Reaction(ReactionType.UPVOTE, LocalDate.now(), data.getUserId(), ReactionTo.POST, p.getId()));
             PostDTO.Get result = new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), 0L, userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath());
             result.setKarma(reactionRepository.getKarmaForPost(p.getId()));
@@ -137,13 +143,15 @@ public class PostController {
     @GetMapping(value = "/posts/search",
     produces = MediaType.APPLICATION_JSON_VALUE)
     List<PostDTO.Get> getPostsForSearch(@RequestParam("search") String search) {
-        QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "title", "text");
+        QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "title", "text", "fileText");
         QueryBuilder nameWildcardQuery = QueryBuilders.wildcardQuery("title", "*" + search + "*");
         QueryBuilder descriptionWildcardQuery = QueryBuilders.wildcardQuery("text", "*" + search + "*");
+        QueryBuilder fileTextWildcardQuery = QueryBuilders.wildcardQuery("fileText", "*" + search + "*");
         QueryBuilder combinedQuery = QueryBuilders.boolQuery()
                 .should(multiMatchQuery)
                 .should(nameWildcardQuery)
-                .should(descriptionWildcardQuery);
+                .should(descriptionWildcardQuery)
+                .should(fileTextWildcardQuery);
         Query query = new NativeSearchQueryBuilder().withFilter(combinedQuery).build();
         SearchHits<Post> postHits = elasticsearchOperations.search(query, Post.class, IndexCoordinates.of("post"));
         List<Post> posts = new ArrayList<>();
