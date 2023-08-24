@@ -63,8 +63,8 @@ export class PostService {
         });
     }
 
-    getPosts(search: string) {
-        return this.http.get<ApiPost[]>(environment.APIUrl + "posts/search?search=" + search);
+    getPosts(search: string, from: number, to: number) {
+        return this.http.get<ApiPost[]>(environment.APIUrl + "posts/search?search=" + search + "&from=" + from + "&to=" + to);
     }
 
 }

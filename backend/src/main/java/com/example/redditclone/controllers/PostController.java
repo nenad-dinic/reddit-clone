@@ -142,7 +142,7 @@ public class PostController {
 
     @GetMapping(value = "/posts/search",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    List<PostDTO.Get> getPostsForSearch(@RequestParam("search") String search) {
+    List<PostDTO.Get> getPostsForSearch(@RequestParam("search") String search, @RequestParam("from") long from, @RequestParam("to") long to) {
         QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "title", "text", "fileText");
         QueryBuilder nameWildcardQuery = QueryBuilders.wildcardQuery("title", "*" + search + "*");
         QueryBuilder descriptionWildcardQuery = QueryBuilders.wildcardQuery("text", "*" + search + "*");
@@ -160,7 +160,10 @@ public class PostController {
         });
         List<PostDTO.Get> result = new ArrayList<>();
         for (Post p : posts) {
-            result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), reactionRepository.getKarmaForPost(p.getId()),  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath()));
+            long karma = reactionRepository.getKarmaForPost(p.getId());
+            if (karma > from && karma < to) {
+                result.add(new PostDTO.Get(p.getId(), p.getTitle(), p.getText(), p.getCreationDate(), p.getImagePath(), p.getPostedBy(), p.getCommunityId(), karma,  userRepository.findById(p.getPostedBy()).get(), communityRepository.findById(p.getCommunityId()).get(), p.getFilePath()));
+            }
         }
         return result;
     }

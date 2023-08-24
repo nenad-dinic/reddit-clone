@@ -44,11 +44,10 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  search(search: string, type: string) {
-    /* if (search === "") {
-      return;
-    } */
-    this.router.navigateByUrl("/search?query=" + search + "&type=" + type);
+  search(search: string, type: string, from: string, to: string) {
+    if (from == "") from = Number.MIN_SAFE_INTEGER.toString();
+    if (to == "") to = Number.MAX_SAFE_INTEGER.toString();
+    this.router.navigateByUrl("/search?query=" + search + "&type=" + type + "&from=" + from + "&to=" + to);
   }
 
   logOutUser() {

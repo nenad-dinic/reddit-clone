@@ -23,13 +23,17 @@ export class SearchPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {
+            let from = Number.parseInt(params["from"]);
+            let to = Number.parseInt(params["to"]);
+            if (from == null || isNaN(from)) from = Number.MIN_SAFE_INTEGER;
+            if (to == null || isNaN(to)) to = Number.MAX_SAFE_INTEGER;
             if (params["type"] == "community") {
-                this.communityService.getCommunities(params["query"]).subscribe(data => {
+                this.communityService.getCommunities(params["query"], from, to).subscribe(data => {
                     this.posts = [];
                     this.communities = data;
                 });
             } else if (params["type"] == "post") {
-                this.postService.getPosts(params["query"]).subscribe(data => {
+                this.postService.getPosts(params["query"], from, to).subscribe(data => {
                     this.communities = [];
                     this.posts = data;
                 });

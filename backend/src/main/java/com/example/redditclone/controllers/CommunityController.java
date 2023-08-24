@@ -142,7 +142,7 @@ public class CommunityController {
 
     @GetMapping(value = "/communities",
     produces = MediaType.APPLICATION_JSON_VALUE)
-    List<CommunityDTO.Get> getCommunitiesForSearch(@RequestParam("search") String search) {
+    List<CommunityDTO.Get> getCommunitiesForSearch(@RequestParam("search") String search, @RequestParam("from") long from, @RequestParam("to") long to) {
         QueryBuilder multiMatchQuery = QueryBuilders.multiMatchQuery(search, "name", "description", "fileText");
         QueryBuilder nameWildcardQuery = QueryBuilders.wildcardQuery("name", "*" + search + "*");
         QueryBuilder descriptionWildcardQuery = QueryBuilders.wildcardQuery("description", "*" + search + "*");
@@ -162,9 +162,11 @@ public class CommunityController {
         for(Community c : communities) {
             int postCount = getPostCount(c.getId());
             int totalKarma = getTotalKarma(c.getId());
+            if (postCount > from && postCount < to) {
             CommunityDTO.Get cDTO = new CommunityDTO.Get(c.getId(), c.getName(), c.getDescription(), c.getCreationDate(), c.isSuspended(), c.getSuspendedReason(), c.getFilePath(), postCount, calcKarma(postCount, totalKarma));
             cDTO.setModerators(getCommunityModerators(cDTO.getId()));
-            result.add(cDTO);
+                result.add(cDTO);
+            }
         }
         return result;
     }

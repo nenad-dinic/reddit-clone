@@ -13,8 +13,8 @@ export class CommunityService {
         return this.http.get<ApiCommunity>(environment.APIUrl + "community?name=" + name);
     }
 
-    getCommunities(search: string) {
-        return this.http.get<ApiCommunity[]>(environment.APIUrl + "communities?search=" + search);
+    getCommunities(search: string, from: number, to: number) {
+        return this.http.get<ApiCommunity[]>(environment.APIUrl + "communities?search=" + search + "&from=" + from + "&to=" + to);
     }
 
     createCommunity(userId:number, name: string|null|undefined, description: string|null|undefined, file: File|null|undefined) {

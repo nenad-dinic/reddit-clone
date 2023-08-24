@@ -3,14 +3,20 @@
     </button>
     <span class="expand"></span>
     <mat-form-field class="fixed-input" appearance="outline">
-        <input matInput #searchInput placeholder="Search" (keyup.enter)="search(searchInput.value, select.value)">
+        <input matInput #searchInput placeholder="Search" (keyup.enter)="search(searchInput.value, select.value, from.value, to.value)">
     </mat-form-field>
     <mat-form-field class="fixed-select" appearance="outline">
         <mat-label>Choose one</mat-label>
-        <mat-select #select value="community" (selectionChange)="search(searchInput.value, select.value)">
+        <mat-select #select value="community" (selectionChange)="search(searchInput.value, select.value, from.value, to.value)">
             <mat-option value="community">Zajednice</mat-option>
             <mat-option value="post">Objave</mat-option>
         </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput #from type="number" placeholder="od" (change)="search(searchInput.value, select.value, from.value, to.value)">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput #to type="number" placeholder="do" (change)="search(searchInput.value, select.value, from.value, to.value)">
     </mat-form-field>
     <span class="expand"></span>
     <div *ngIf="userService.loggedInUser == undefined">
